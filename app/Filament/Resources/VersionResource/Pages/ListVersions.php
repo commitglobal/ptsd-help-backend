@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\VersionResource\Pages;
 
 use App\Filament\Resources\VersionResource;
-use Filament\Actions;
+use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListVersions extends ListRecords
 {
     protected static string $resource = VersionResource::class;
 
-    protected function getHeaderActions(): array
+    protected function getActions(): array
     {
         return [
             Actions\CreateAction::make(),

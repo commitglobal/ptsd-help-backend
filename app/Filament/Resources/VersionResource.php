@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VersionResource extends Resource
 {
@@ -89,12 +90,12 @@ class VersionResource extends Resource
                     ->toggleable(),
             ])
             ->filters([
+                Tables\Filters\TrashedFilter::make(), // TODO: display this filter only when superadmins are accessing this page
                 SelectFilter::make('status')
                     ->label(__('version.field.status'))
                     ->options(VersionStatus::options())
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
-
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
@@ -114,7 +115,16 @@ class VersionResource extends Resource
         return [
             'index' => Pages\ListVersions::route('/'),
             'create' => Pages\CreateVersion::route('/create'),
+            'view' => Pages\ViewVersion::route('/{record}'),
             'edit' => Pages\EditVersion::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }

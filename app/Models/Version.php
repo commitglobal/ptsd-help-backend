@@ -7,16 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enum\VersionStatus;
 use Illuminate\Support\Facades\Date;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Version extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
-        'type',
-        'organisation_id',
     ];
 
     protected $casts = [

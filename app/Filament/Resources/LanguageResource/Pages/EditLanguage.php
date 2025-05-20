@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionResource\Pages;
+namespace App\Filament\Resources\LanguageResource\Pages;
 
-use App\Filament\Resources\VersionResource;
+use App\Filament\Resources\LanguageResource;
 use Filament\Resources\Pages\EditRecord;
 
-class EditVersion extends EditRecord
+class EditLanguage extends EditRecord
 {
-    protected static string $resource = VersionResource::class;
+    protected static string $resource = LanguageResource::class;
 
     protected function getActions(): array
     {
