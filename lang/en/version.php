@@ -18,6 +18,7 @@ return [
     'field' => [
         'name' => 'Name',
         'status' => 'Status',
+        'countries' => 'Countries',
         'published_at' => 'Published at'
     ],
 

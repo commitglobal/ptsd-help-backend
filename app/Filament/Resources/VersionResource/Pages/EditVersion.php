@@ -17,9 +17,8 @@ class EditVersion extends EditRecord
             //
         ];
     }
-
     protected function getRedirectUrl(): ?string
     {
-        return static::getResource()::getUrl('view', $this->getRecord());
+        return static::getResource()::getUrl('view', ['record' => $this->getRecord()]);
     }
 }

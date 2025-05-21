@@ -12,5 +12,6 @@ return [
     'field' => [
         'id' => 'ISO2',
         'name' => 'Name',
+        'languagesCount' => '# of languages',
     ]
 ];

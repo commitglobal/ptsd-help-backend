@@ -14,4 +14,9 @@ class Country extends Model
         'id',
         'name',
     ];
+
+    public function versions()
+    {
+        return $this->belongsToMany(Version::class, 'country_version', 'country_id', 'version_id')->withTimestamps();
+    }
 }

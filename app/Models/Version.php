@@ -68,4 +68,9 @@ class Version extends Model
         return $this->status->is(VersionStatus::drafted);
     }
 
+    public function countries()
+    {
+        return $this->belongsToMany(Country::class, 'country_version', 'version_id', 'country_id')->withTimestamps();
+    }
+
 }

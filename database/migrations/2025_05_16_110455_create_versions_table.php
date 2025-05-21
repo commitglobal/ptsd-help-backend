@@ -38,6 +38,24 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        Schema::create('country_version', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('version_id')->constrained()->onDelete('cascade');
+            $table->string('country_id');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+
+        Schema::create('country_version_language', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('country_version_id')->constrained('country_version')->onDelete('cascade');
+            $table->string('language_id');
+            $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+
         Excel::import(new CountriesImport, 'countries.csv', 'seed-data');
         Excel::import(new LanguagesImport, 'languages.csv', 'seed-data');
     }
@@ -50,5 +68,7 @@ return new class extends Migration {
         Schema::dropIfExists('versions');
         Schema::dropIfExists('countries');
         Schema::dropIfExists('languages');
+        Schema::dropIfExists('country_version');
+        Schema::dropIfExists('country_version_language');
     }
 };

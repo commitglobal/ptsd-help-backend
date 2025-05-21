@@ -19,6 +19,8 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\VersionResource\RelationManagers\CountriesRelationManager;
+use Filament\Forms\Components\Select;
 
 class VersionResource extends Resource
 {
@@ -33,7 +35,6 @@ class VersionResource extends Resource
                 Card::make()
                     ->columns(1)
                     ->schema([
-
                         DateTimePicker::make('published_at')
                             ->label(__('version.field.published_at'))
                             ->visible(fn(?Version $record) => $record?->isPublished())
@@ -88,6 +89,7 @@ class VersionResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(), // TODO: display this filter only when superadmins are accessing this page
@@ -106,7 +108,7 @@ class VersionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CountriesRelationManager::class
         ];
     }
 
