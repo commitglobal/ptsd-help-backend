@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Imports\CountriesImport;
 use App\Imports\LanguagesImport;
-use App\Models\Country;
-use App\Models\Language;
-use App\Models\Version;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -38,20 +38,18 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('country_version', function (Blueprint $table) {
+        Schema::create('version_country_language', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('version_id')->constrained()->onDelete('cascade');
+            $table->foreignId('version_id')->constrained('versions')->onDelete('cascade');
+
             $table->string('country_id');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
 
-            $table->timestamps();
-        });
-
-        Schema::create('country_version_language', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('country_version_id')->constrained('country_version')->onDelete('cascade');
             $table->string('language_id');
             $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
+
+            $table->json('tools')->nullable();
+            $table->index(['version_id', 'country_id', 'language_id'])->unique();
 
             $table->timestamps();
         });

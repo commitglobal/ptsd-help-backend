@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Models;
-use Illuminate\Database\Eloquent\Builder;
+declare(strict_types=1);
 
+namespace App\Models;
+
+use App\Enum\VersionStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enum\VersionStatus;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Date;
+
 class Version extends Model
 {
     use HasFactory;
@@ -67,10 +70,4 @@ class Version extends Model
     {
         return $this->status->is(VersionStatus::drafted);
     }
-
-    public function countries()
-    {
-        return $this->belongsToMany(Country::class, 'country_version', 'version_id', 'country_id')->withTimestamps();
-    }
-
 }

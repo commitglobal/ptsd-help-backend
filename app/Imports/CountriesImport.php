@@ -25,7 +25,6 @@ class CountriesImport implements ToModel, WithBatchInserts, WithHeadingRow, With
         return 100;
     }
 
-
     public function uniqueBy()
     {
         return 'id';

@@ -19,7 +19,7 @@ return [
         'name' => 'Name',
         'status' => 'Status',
         'countries' => 'Countries',
-        'published_at' => 'Published at'
+        'published_at' => 'Published at',
     ],
 
     'action' => [
@@ -42,6 +42,6 @@ return [
                 'button' => 'Archive',
                 'success' => 'Version was archived.',
             ],
-        ]
-    ]
+        ],
+    ],
 ];

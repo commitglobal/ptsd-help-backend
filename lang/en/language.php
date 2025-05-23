@@ -12,5 +12,5 @@ return [
     'field' => [
         'id' => 'ISO2',
         'name' => 'Name',
-    ]
+    ],
 ];

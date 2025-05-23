@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CountryResource\Pages;
 use App\Models\Country;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
-
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
 
 class CountryResource extends Resource
 {
@@ -51,7 +52,7 @@ class CountryResource extends Resource
                 TextColumn::make('name')
                     ->label(__('country.field.name'))
                     ->searchable()
-                    ->sortable()
+                    ->sortable(),
 
             ])
             ->filters([])

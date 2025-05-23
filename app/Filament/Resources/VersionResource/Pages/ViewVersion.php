@@ -26,15 +26,15 @@ class ViewVersion extends ViewRecord
     {
         return [
             PublishVersionAction::make()
-                ->hidden(fn(Version $record) => $record->isPublished())
+                ->hidden(fn (Version $record) => $record->isPublished())
                 ->record($this->getRecord()),
 
             DraftVersionAction::make()
-                ->hidden(fn(Version $record) => $record->isDrafted())
+                ->hidden(fn (Version $record) => $record->isDrafted())
                 ->record($this->getRecord()),
 
             ArchiveVersionAction::make()
-                ->hidden(fn(Version $record) => $record->isArchived())
+                ->hidden(fn (Version $record) => $record->isArchived())
                 ->record($this->getRecord()),
 
             EditAction::make(),
