@@ -15,6 +15,7 @@ use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\Relationsh
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\RidForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\SleepForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\WorryTimeForm;
+use App\Filament\Resources\VersionCountryLanguageResource\Forms\Symptoms\SymptomsForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Pages;
 use App\Models\VersionCountryLanguage;
 use Filament\Forms\Components\Card;
@@ -62,9 +63,7 @@ class VersionCountryLanguageResource extends Resource
 
                             Tabs\Tab::make('Manage > Symptoms')
                                 ->schema([
-                                    Card::make()->schema([
-
-                                    ]),
+                                    Card::make()->schema(SymptomsForm::getSchema()),
                                 ]),
 
                             Tabs\Tab::make('Manage > Tools')
