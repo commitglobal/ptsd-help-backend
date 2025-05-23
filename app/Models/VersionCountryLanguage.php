@@ -16,11 +16,13 @@ class VersionCountryLanguage extends Model
         'language_id',
         'tools',
         'symptoms',
+        'support',
     ];
 
     protected $casts = [
         'tools' => 'array',
         'symptoms' => 'array',
+        'support' => 'array',
     ];
 
     public function __construct(array $attributes = [])
@@ -28,7 +30,7 @@ class VersionCountryLanguage extends Model
         parent::__construct($attributes);
 
         // Set default tools value if not provided
-        if (! isset($this->tools)) {
+        if (!isset($this->tools)) {
             $this->tools = [
                 'relationships' => [
                     'label' => 'relationships',
@@ -121,8 +123,6 @@ class VersionCountryLanguage extends Model
                 ],
                 'my-strengths' => ['label' => 'my-strengths', 'enabled' => true],
             ];
-            // 'symtoms' => [
-            // ]
         }
     }
 

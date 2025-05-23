@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enum\VersionStatus;
+use App\Filament\Resources\VersionCountryLanguageResource\Forms\Support\SupportForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Symptoms\SymptomsForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\AmbientSoundsForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\MindfulnessForm;
@@ -133,9 +134,7 @@ class VersionCountryLanguageResource extends Resource
 
                             Tabs\Tab::make('Support screen')
                                 ->schema([
-                                    Card::make()->schema([
-
-                                    ]),
+                                    Card::make()->schema(SupportForm::getSchema()),
                                 ]),
 
                             Tabs\Tab::make('Learn screen')
