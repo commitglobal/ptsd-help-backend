@@ -18,6 +18,8 @@ class Version extends Model
 
     protected $fillable = [
         'name',
+        'status',
+        'published_at',
     ];
 
     protected $casts = [

@@ -33,12 +33,15 @@ class VersionResource extends Resource
             ->schema([
                 Card::make()
                     ->columns(1)
-                    ->schema([
+                    ->schema(components: [
                         DateTimePicker::make('published_at')
                             ->label(__('version.field.published_at'))
-                            ->visible(fn (?Version $record) => $record?->isPublished())
-                            ->columnSpan(1) // reduce width in grid
+                            ->visible(fn(?Version $record) => $record?->isPublished())
                             ->disabled()
+                            ->native(false)
+                            ->timezone('UTC')
+
+                            ->displayFormat('Y-m-d\TH:i:s\Z')
                             ->extraAttributes(['class' => 'max-w-sm']),
 
                         Hidden::make('status')
@@ -62,7 +65,7 @@ class VersionResource extends Resource
 
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn (VersionStatus $state): string => match ($state) {
+                    ->color(fn(VersionStatus $state): string => match ($state) {
                         VersionStatus::drafted => 'secondary',
                         VersionStatus::archived => 'warning',
                         VersionStatus::published => 'success',
@@ -70,21 +73,21 @@ class VersionResource extends Resource
 
                 TextColumn::make('published_at')
                     ->label(__('version.field.published_at'))
-                    ->formatStateUsing(fn ($state) => $state?->toDateTimeString() ?? '-')
+                    ->formatStateUsing(fn($state) => $state?->toDateTimeString() ?? '-')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
-                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
-                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
