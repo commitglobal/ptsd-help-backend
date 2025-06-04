@@ -8,7 +8,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -50,7 +51,6 @@ return new class extends Migration {
             $table->json('tools')->nullable();
             $table->json('symptoms')->nullable();
             $table->json('support')->nullable();
-
 
             $table->index(['version_id', 'country_id', 'language_id'])->unique();
 

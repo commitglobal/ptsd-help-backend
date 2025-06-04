@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enum\VersionStatus;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Support\SupportForm;
+use App\Filament\Resources\VersionCountryLanguageResource\Forms\ContentForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Symptoms\SymptomsForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\AmbientSoundsForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\MindfulnessForm;
@@ -22,7 +22,7 @@ use App\Models\VersionCountryLanguage;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -43,114 +43,112 @@ class VersionCountryLanguageResource extends Resource
         return $form->schema(
             [
                 Card::make()->schema([
-                    Tabs::make('Form Tabs')
-                        ->tabs([
-                            Tabs\Tab::make('Basic Info')
-                                ->schema([
-                                    Card::make()->schema([
-                                        Select::make('version_id')
-                                            ->relationship('version', 'name')
-                                            ->required(),
+                    Wizard::make([
+                        Wizard\Step::make('Basic Info')
+                            ->schema([
+                                Card::make()->schema([
+                                    Select::make('version_id')
+                                        ->relationship('version', 'name')
+                                        ->required(),
 
-                                        Select::make('country_id')
-                                            ->relationship('country', 'name')
-                                            ->required(),
+                                    Select::make('country_id')
+                                        ->relationship('country', 'name')
+                                        ->required(),
 
-                                        Select::make('language_id')
-                                            ->relationship('language', 'name')
-                                            ->required(),
-                                    ]),
+                                    Select::make('language_id')
+                                        ->relationship('language', 'name')
+                                        ->required(),
                                 ]),
+                            ]),
 
-                            Tabs\Tab::make('Manage > Symptoms')
-                                ->schema([
-                                    Card::make()->schema(SymptomsForm::getSchema()),
+                        Wizard\Step::make('Manage > Symptoms')
+                            ->schema([
+                                Card::make()->schema(SymptomsForm::getSchema()),
+                            ]),
+
+                        Wizard\Step::make('Manage > Tools')
+                            ->schema([
+                                Card::make()->schema([
+                                    Section::make('Relationships')
+                                        ->schema(RelationshipsForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('Ambient sounds')
+                                        ->schema(AmbientSoundsForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('Mindfulness')
+                                        ->schema(MindfulnessForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('Pause')
+                                        ->schema(PauseForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('My feelings')
+                                        ->schema(MyFeelingsForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('Worry time')
+                                        ->schema(WorryTimeForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('Rid')
+                                        ->schema(RidForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('Recreational activities')
+                                        ->schema(RecreationalActivitiesForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('Sleep')
+                                        ->schema(SleepForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
+                                    Section::make('My strengths')
+                                        ->schema(MyStrengthsForm::getSchema())
+                                        ->collapsible()
+                                        ->collapsed()
+                                        ->compact(),
+
                                 ]),
+                            ]),
 
-                            Tabs\Tab::make('Manage > Tools')
-                                ->schema([
-                                    Card::make()->schema([
-                                        Section::make('Relationships')
-                                            ->schema(RelationshipsForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
-                                        Section::make('Ambient sounds')
-                                            ->schema(AmbientSoundsForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
+                        Wizard\Step::make('Support screen')
+                            ->schema([
+                                Card::make()->schema(ContentForm::getSchema()),
+                            ]),
 
-                                        Section::make('Mindfulness')
-                                            ->schema(MindfulnessForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
+                        Wizard\Step::make('Learn screen')
+                            ->schema([
+                                Card::make()->schema(ContentForm::getSchema()),
+                            ]),
 
-                                        Section::make('Pause')
-                                            ->schema(PauseForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
+                        Wizard\Step::make('Track screen')
+                            ->schema([
+                                Card::make()->schema([
 
-                                        Section::make('My feelings')
-                                            ->schema(MyFeelingsForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
-
-                                        Section::make('Worry time')
-                                            ->schema(WorryTimeForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
-
-                                        Section::make('Rid')
-                                            ->schema(RidForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
-
-                                        Section::make('Recreational activities')
-                                            ->schema(RecreationalActivitiesForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
-
-                                        Section::make('Sleep')
-                                            ->schema(SleepForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
-
-                                        Section::make('My strengths')
-                                            ->schema(MyStrengthsForm::getSchema())
-                                            ->collapsible()
-                                            ->collapsed()
-                                            ->compact(),
-
-                                    ]),
                                 ]),
-
-                            Tabs\Tab::make('Support screen')
-                                ->schema([
-                                    Card::make()->schema(SupportForm::getSchema()),
-                                ]),
-
-                            Tabs\Tab::make('Learn screen')
-                                ->schema([
-                                    Card::make()->schema([
-
-                                    ]),
-                                ]),
-
-                            Tabs\Tab::make('Track screen')
-                                ->schema([
-                                    Card::make()->schema([
-
-                                    ]),
-                                ]),
-                        ]),
+                            ]),
+                    ]),
                 ]),
             ]
         );
