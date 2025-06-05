@@ -8,8 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -19,9 +18,11 @@ return new class extends Migration
             $table->id();
             $table->string(column: 'name');
             $table->string('status')->default('drafted');
+
+            $table->unique('name');
+
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('countries', function (Blueprint $table) {
@@ -38,12 +39,23 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('version_country_language', function (Blueprint $table) {
+        Schema::create('version_country', function (Blueprint $table) {
             $table->id();
             $table->foreignId('version_id')->constrained('versions')->onDelete('cascade');
 
             $table->string('country_id');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+
+            $table->json('tools');
+
+            $table->unique(['version_id', 'country_id']);
+
+            $table->timestamps();
+        });
+
+        Schema::create('version_country_language', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('version_country_id')->constrained('version_country')->onDelete('cascade');
 
             $table->string('language_id');
             $table->foreign('language_id')->references('id')->on('languages')->onDelete('cascade');
@@ -52,7 +64,7 @@ return new class extends Migration
             $table->json('symptoms')->nullable();
             $table->json('support')->nullable();
 
-            $table->index(['version_id', 'country_id', 'language_id'])->unique();
+            $table->unique(['version_country_id', 'language_id']);
 
             $table->timestamps();
         });

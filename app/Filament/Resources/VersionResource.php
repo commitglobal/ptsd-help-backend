@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enum\VersionStatus;
+use App\Filament\Resources\VersionResource\Actions\ExportAction;
 use App\Filament\Resources\VersionResource\Pages;
+use App\Filament\Resources\VersionResource\RelationManagers\VersionCountriesRelationManager;
+use App\Models\Country;
 use App\Models\Version;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,8 +22,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VersionResource extends Resource
 {
@@ -33,14 +35,13 @@ class VersionResource extends Resource
             ->schema([
                 Card::make()
                     ->columns(1)
-                    ->schema(components: [
+                    ->schema([
                         DateTimePicker::make('published_at')
                             ->label(__('version.field.published_at'))
                             ->visible(fn(?Version $record) => $record?->isPublished())
                             ->disabled()
                             ->native(false)
                             ->timezone('UTC')
-
                             ->displayFormat('Y-m-d\TH:i:s\Z')
                             ->extraAttributes(['class' => 'max-w-sm']),
 
@@ -50,7 +51,8 @@ class VersionResource extends Resource
                         TextInput::make('name')
                             ->label(__('version.field.name'))
                             ->maxLength(200)
-                            ->required(),
+                            ->required()
+                            ->unique()
                     ]),
             ]);
     }
@@ -59,11 +61,17 @@ class VersionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
+                TextColumn::make('name')
+                    ->label(__('version.field.name'))
                     ->sortable(),
 
+                TextColumn::make('countries')
+                    ->label(__('version.field.countries'))
+                    ->badge()
+                    ->getStateUsing(fn(Version $record) => $record->versionCountries->pluck('country.name')->filter()),
+
                 TextColumn::make('status')
+                    ->label(__('version.field.status'))
                     ->badge()
                     ->color(fn(VersionStatus $state): string => match ($state) {
                         VersionStatus::drafted => 'secondary',
@@ -91,10 +99,8 @@ class VersionResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(), // TODO: display this filter only when superadmins are accessing this page
                 SelectFilter::make('status')
                     ->label(__('version.field.status'))
                     ->options(VersionStatus::options()),
@@ -102,9 +108,18 @@ class VersionResource extends Resource
             ->filtersLayout(FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                ExportAction::make(),
             ])
             ->bulkActions([
-            ]);
+            ])
+            ->modifyQueryUsing(fn($query) => $query->with('versionCountries.country'));
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            VersionCountriesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
@@ -115,13 +130,5 @@ class VersionResource extends Resource
             'view' => Pages\ViewVersion::route('/{record}'),
             'edit' => Pages\EditVersion::route('/{record}/edit'),
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
     }
 }

@@ -8,13 +8,11 @@ use App\Enum\VersionStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Date;
 
 class Version extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -71,5 +69,15 @@ class Version extends Model
     public function isDrafted(): bool
     {
         return $this->status->is(VersionStatus::drafted);
+    }
+
+    public function countries()
+    {
+        return $this->belongsToMany(Country::class, 'version_country');
+    }
+
+    public function versionCountries()
+    {
+        return $this->hasMany(related: VersionCountry::class);
     }
 }

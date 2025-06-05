@@ -30,7 +30,7 @@ class VersionCountryLanguage extends Model
         parent::__construct($attributes);
 
         // Set default tools value if not provided
-        if (! isset($this->tools)) {
+        if (!isset($this->tools)) {
             $this->tools = [
                 'relationships' => [
                     'label' => 'relationships',
@@ -126,11 +126,6 @@ class VersionCountryLanguage extends Model
         }
     }
 
-    public function version()
-    {
-        return $this->belongsTo(related: Version::class);
-    }
-
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -139,5 +134,10 @@ class VersionCountryLanguage extends Model
     public function language()
     {
         return $this->belongsTo(Language::class);
+    }
+
+    public function versionCountry()
+    {
+        return $this->belongsTo(VersionCountry::class, 'version_country_id');
     }
 }
