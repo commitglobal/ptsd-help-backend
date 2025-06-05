@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\VersionCountryResource\RelationManagers;
 
+use App\Models\Country;
+use App\Models\Version;
 use App\Models\VersionCountry;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -19,10 +21,27 @@ class VersionCountryLanguagesRelationManager extends RelationManager
     {
         return $form
             ->schema([
+                Select::make('version_id')
+                    ->label('Version')
+                    ->options(Version::query()->pluck('name', 'id'))
+                    ->required()
+                    ->reactive()
+                    ->default(function ($livewire) {
+                        return optional($livewire->getRecord()?->versionCountry)->version_id;
+                    }),
+
+                Select::make('country_id')
+                    ->label('Country')
+                    ->options(
+                        fn (callable $get) => Country::whereHas('versionCountries', function ($query) use ($get) {
+                            $query->where('version_id', $get('version_id'));
+                        })->pluck('name', 'id')
+                    )
+                    ->required()
+                    ->reactive(),
+
                 Select::make('version_country_id')
                     ->label('Version - Country')
-                    ->required()
-                    ->searchable()
                     ->options(function () {
                         return VersionCountry::with(['version', 'country'])
                             ->get()
@@ -33,7 +52,8 @@ class VersionCountryLanguagesRelationManager extends RelationManager
                             })
                             ->toArray();
                     })
-                    ->columnSpan(1),
+                    ->required()
+                    ->hidden(), // Hide the raw field,
                 Select::make('language_id')
                     ->relationship('language', 'name')
                     ->required()

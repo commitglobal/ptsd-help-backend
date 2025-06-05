@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionCountryResource\Forms\Tools;
+namespace App\Filament\Resources\Forms\Tools;
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
@@ -17,16 +17,14 @@ class WorryTimeForm
                 ->label('Worry time');
     }
 
-    public static function getToolsResourcesSchema(): array
+    public static function getToolsResourcesSchema(): Field
     {
-        return [
-            Toggle::make('tools.worry-time.enabled')
-                ->label('Worry time'),
-
+        return
             TextInput::make('tools.worry-time.categoryIcon')
-                ->label('Category icon')
+                ->label('Worry time Category icon')
                 ->url()
-                ->visible(fn(callable $get) => $get('tools.worry-time.enabled') === true),
-        ];
+                ->visible(function ($livewire) {
+                    return $livewire->getRecord()->versionCountry->tools['worry-time'] === true;
+                });
     }
 }

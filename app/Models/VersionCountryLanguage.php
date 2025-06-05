@@ -22,7 +22,6 @@ class VersionCountryLanguage extends Model
         'support' => 'array',
     ];
 
-
     public function country()
     {
         return $this->belongsTo(Country::class);

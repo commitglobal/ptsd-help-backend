@@ -18,7 +18,7 @@ class ViewVersionCountry extends ViewRecord
         // Eager load the relationships if not already loaded
         $this->getRecord()->loadMissing(['version', 'country']);
 
-        return sprintf(
+        return \sprintf(
             '%s - %s',
             $this->getRecord()->version->name,
             $this->getRecord()->country->name

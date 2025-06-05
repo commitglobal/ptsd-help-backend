@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionCountryResource\Forms\Tools;
+namespace App\Filament\Resources\Forms\Tools;
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
@@ -17,16 +17,14 @@ class RidForm
                 ->label('RID');
     }
 
-    public static function getToolsResourcesSchema(): array
+    public static function getToolsResourcesSchema(): Field
     {
-        return [
-            Toggle::make('tools.rid.enabled')
-                ->label('RID'),
-
+        return
             TextInput::make('tools.rid.categoryIcon')
-                ->label('Category icon')
+                ->label('RID Category icon')
                 ->url()
-                ->visible(fn(callable $get) => $get('tools.rid.enabled') === true),
-        ];
+                ->visible(function ($livewire) {
+                    return $livewire->getRecord()->versionCountry->tools['rid'] === true;
+                });
     }
 }

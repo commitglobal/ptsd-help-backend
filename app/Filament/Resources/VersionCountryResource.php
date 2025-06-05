@@ -8,7 +8,6 @@ use App\Filament\Resources\VersionCountryResource\Pages;
 use App\Filament\Resources\VersionCountryResource\RelationManagers\VersionCountryLanguagesRelationManager;
 use App\Models\VersionCountry;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -28,44 +27,40 @@ class VersionCountryResource extends Resource
     {
         return $form
             ->schema([
-                Grid::make()
-                    ->schema([
-                        Select::make('version_id')
-                            ->label('Version')
-                            ->relationship('version', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
+                Select::make('version_id')
+                    ->label('Version')
+                    ->relationship('version', 'name')
+                    ->required()
+                    ->preload()
+                    ->searchable(),
 
-                        Select::make('country_id')
-                            ->relationship('country', 'name')
-                            ->required()
-                            ->unique(
-                                table: 'version_country',
-                                column: 'country_id',
-                                ignoreRecord: true,
-                                modifyRuleUsing: function (\Illuminate\Validation\Rules\Unique $rule, $livewire) {
-                                    if ($livewire instanceof \Filament\Resources\Pages\CreateRecord) {
-                                        return $rule->where('country_id', $livewire->data['country_id']);
-                                    }
+                Select::make('country_id')
+                    ->relationship('country', 'name')
+                    ->required()
+                    ->unique(
+                        table: 'version_country',
+                        column: 'country_id',
+                        ignoreRecord: true,
+                        modifyRuleUsing: function (\Illuminate\Validation\Rules\Unique $rule, $livewire) {
+                            if ($livewire instanceof \Filament\Resources\Pages\CreateRecord) {
+                                return $rule->where('country_id', $livewire->data['country_id']);
+                            }
 
-                                    if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
-                                        return $rule->where('country_id', $livewire->record->country_id);
-                                    }
+                            if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
+                                return $rule->where('country_id', $livewire->record->country_id);
+                            }
 
-                                    return $rule;
-                                }
-                            )
-                            ->validationMessages([
-                                'unique' => 'This Country is already associated with this version.',
-                            ]),
-
-                        Card::make()
-                            ->heading('Tools Settings') // Alternative to label with different styling
-                            ->description('Configure the available tools for this version-country combination')
-                            ->schema(VersionCountryResource\Forms\ToolsForm::getToolsSchema()),
-
+                            return $rule;
+                        }
+                    )
+                    ->validationMessages([
+                        'unique' => 'This Country is already associated with this version.',
                     ]),
+
+                Card::make()
+                    ->heading('Tools Settings') // Alternative to label with different styling
+                    ->description('Configure the available tools for this version-country combination')
+                    ->schema(VersionCountryResource\Forms\ToolsForm::getToolsSchema()),
             ]);
     }
 
@@ -80,7 +75,7 @@ class VersionCountryResource extends Resource
                     ->label(__('country.field.languages'))
                     ->badge()
                     ->getStateUsing(
-                        fn(VersionCountry $record) => $record->countryLanguages
+                        fn (VersionCountry $record) => $record->countryLanguages
                             ->pluck('language.name')
                             ->filter()
                     ),
@@ -105,7 +100,7 @@ class VersionCountryResource extends Resource
             ])
             ->bulkActions([
             ])
-            ->modifyQueryUsing(fn($query) => $query->with('countryLanguages.language'));
+            ->modifyQueryUsing(fn ($query) => $query->with('countryLanguages.language'));
     }
 
     public static function getRelations(): array

@@ -26,7 +26,7 @@ class VersionCountry extends Model
         parent::__construct($attributes);
 
         // Set default tools value if not provided
-        if (!isset($this->tools)) {
+        if (! isset($this->tools)) {
             $this->tools = [
                 'relationships' => [
                     'enabled' => true,
@@ -42,7 +42,7 @@ class VersionCountry extends Model
                     'mindfulness-mindful-walking' => true,
                     'mindfulness-emotional-discomfort' => true,
                     'mindfulness-sense-awareness' => true,
-                    'mindfulness-loving-kindness' => true
+                    'mindfulness-loving-kindness' => true,
                 ],
                 'pause' => true,
                 'my-feelings' => true,
@@ -64,6 +64,7 @@ class VersionCountry extends Model
             ];
         }
     }
+
     public function version(): BelongsTo
     {
         return $this->belongsTo(Version::class);

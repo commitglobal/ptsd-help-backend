@@ -19,8 +19,8 @@ class Country extends Model
         'name',
     ];
 
-    public function versions()
+    public function versionCountries()
     {
-        return $this->belongsToMany(Version::class, 'country_version', 'country_id', 'version_id')->withTimestamps();
+        return $this->belongsToMany(Version::class, 'version_country', 'country_id', 'version_id')->withTimestamps();
     }
 }

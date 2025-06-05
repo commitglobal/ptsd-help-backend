@@ -7,8 +7,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VersionCountryLanguageResource\Pages;
 use App\Models\VersionCountry;
 use App\Models\VersionCountryLanguage;
-use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -26,47 +27,81 @@ class VersionCountryLanguageResource extends Resource
     {
         return $form
             ->schema([
-                Grid::make()
-                    ->schema([
-                        Select::make('version_country_id')
-                            ->label('Version - Country')
-                            ->required()
-                            ->searchable()
-                            ->options(function () {
-                                return VersionCountry::with(['version', 'country'])
-                                    ->get()
-                                    ->mapWithKeys(function (VersionCountry $vc) {
-                                        $label = "{$vc->version->name} - {$vc->country->name}";
+                Select::make('version_country_id')
+                    ->label('Version - Country')
+                    ->required()
+                    ->searchable()
+                    ->options(function () {
+                        return VersionCountry::with(['version', 'country'])
+                            ->get()
+                            ->groupBy(fn ($vc) => $vc->version->name) // Group by version name
+                            ->sortKeys()
+                            ->map(function ($group) {
+                                return $group->mapWithKeys(function (VersionCountry $vc) {
+                                    $label = "{$vc->version->name} / {$vc->country->name}";
 
-                                        return [$vc->id => $label];
-                                    })
-                                    ->toArray();
+                                    return [$vc->id => $label];
+                                });
                             })
-                            ->columnSpan(1),
-                        Select::make('language_id')
-                            ->relationship('language', 'name')
-                            ->required()
-                            ->unique(
-                                table: 'version_country_language',
-                                column: 'language_id',
-                                ignoreRecord: true,
-                                modifyRuleUsing: function (\Illuminate\Validation\Rules\Unique $rule, $livewire) {
-                                    if ($livewire instanceof \Filament\Resources\Pages\CreateRecord) {
-                                        return $rule->where('version_country_id', $livewire->data['version_country_id']);
-                                    }
+                            ->toArray();
+                    }),
+                Select::make('language_id')->relationship('language', 'name')->required()->unique(
+                    table: 'version_country_language',
+                    column: 'language_id',
+                    ignoreRecord: true,
+                    modifyRuleUsing: function (\Illuminate\Validation\Rules\Unique $rule, $livewire) {
+                        if ($livewire instanceof \Filament\Resources\Pages\CreateRecord) {
+                            return $rule->where('version_country_id', $livewire->data['version_country_id']);
+                        }if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
+                            return $rule->where('version_country_id', $livewire->record->version_country_id);
+                        }
 
-                                    if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
-                                        return $rule->where('version_country_id', $livewire->record->version_country_id);
-                                    }
+return $rule;
+                    }
+                )->validationMessages([
+                    'unique' => 'This language is already associated with this country.',
+                ]),
 
-                                    return $rule;
-                                }
-                            )
-                            ->validationMessages([
-                                'unique' => 'This language is already associated with this country.',
+                Card::make()
+                    ->heading(heading: 'Content management')
+                    ->description('Configure the available content for the current version/country/language')
+                    ->schema([
+
+                        Tabs::make('Form Tabs')
+                            ->tabs([
+
+                                Tabs\Tab::make('Manage > Symptoms')
+                                    ->schema([
+                                        Card::make()->schema([
+
+                                        ]),
+                                    ]),
+
+                                Tabs\Tab::make('Manage > Tools')
+                                    ->schema(VersionCountryResource\Forms\ToolsForm::getToolsResourcesSchema()),
+
+                                Tabs\Tab::make('Support screen')
+                                    ->schema([
+                                        Card::make()->schema([
+
+                                        ]),
+                                    ]),
+
+                                Tabs\Tab::make('Learn screen')
+                                    ->schema([
+                                        Card::make()->schema([
+
+                                        ]),
+                                    ]),
+
+                                Tabs\Tab::make('Track screen')
+                                    ->schema([
+                                        Card::make()->schema([
+
+                                        ]),
+                                    ]),
                             ]),
-                    ])
-                    ->columns(2),
+                    ]),
             ]);
     }
 
