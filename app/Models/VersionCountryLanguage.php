@@ -29,7 +29,7 @@ class VersionCountryLanguage extends Model
         parent::__construct($attributes);
 
         // Set default tools value if not provided
-        if (!isset($this->tools)) {
+        if (! isset($this->tools)) {
             $this->tools = [
                 'relationships' => [
                     'label' => 'relationships',

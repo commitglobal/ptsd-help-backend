@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VersionCountry extends Model
 {
-    protected $table = "version_country";
+    protected $table = 'version_country';
+
     protected $fillable = [
         'version_id',
         'country_id',

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools;
+namespace App\Filament\Resources\VersionCountryResource\Forms\Tools;
 
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -10,7 +10,43 @@ use Filament\Forms\Components\Toggle;
 
 class RelationshipsForm
 {
-    public static function getSchema(): array
+    public static function getToolsSchema(): array
+    {
+        return [
+            Toggle::make('tools.relationships.enabled')
+                ->label('Enable Relationships')
+                ->default(true)
+                ->live(),
+
+            Section::make('Relationships Subcategories')
+                ->schema([
+                    Toggle::make('tools.relationships.subcategories.relationships-reconnect-with-partner.enabled')
+                        ->label('Reconnect With Partner')
+                        ->default(true)
+                        ->live(),
+
+                    Toggle::make('tools.relationships.subcategories.relationships-positive-communication.enabled')
+                        ->label('Positive Communication')
+                        ->default(true)
+                        ->live(),
+
+                    Toggle::make('tools.relationships.subcategories.relationships-i-messages.enabled')
+                        ->label('I-Messages')
+                        ->default(true)
+                        ->live(),
+
+                    Toggle::make('tools.relationships.subcategories.relationships-healthy-arguments.enabled')
+                        ->label('Healthy Arguments')
+                        ->default(true)
+                        ->live(),
+                ])
+                ->compact()
+                ->collapsible()
+                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+        ];
+    }
+
+    public static function getToolsResourcesSchema(): array
     {
         return [
             Toggle::make('tools.relationships.enabled')
@@ -35,7 +71,6 @@ class RelationshipsForm
                         ->label('Category icon')
                         ->url()
                         ->visible(fn (callable $get) => $get('tools.relationships.subcategories.relationships-reconnect-with-partner.enabled') === true),
-
                 ])
                 ->collapsible()
                 ->collapsed()

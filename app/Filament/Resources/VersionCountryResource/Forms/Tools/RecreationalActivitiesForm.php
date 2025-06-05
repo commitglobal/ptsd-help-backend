@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools;
+namespace App\Filament\Resources\VersionCountryResource\Forms\Tools;
 
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -10,7 +10,38 @@ use Filament\Forms\Components\Toggle;
 
 class RecreationalActivitiesForm
 {
-    public static function getSchema(): array
+    public static function getToolsSchema(): array
+    {
+        return [
+            Toggle::make(name: 'tools.recreational-activities.enabled')
+                ->label('Enable Recreational activities')
+                ->default(true)
+                ->live(),
+
+            Section::make('Recreational activities Subcategories')
+                ->schema([
+                    Toggle::make(name: 'tools.recreational-activities.subcategories.recreational-activities-alone.enabled')
+                        ->label('recreational-activities-alone')
+                        ->default(true)
+                        ->live(),
+
+                    Toggle::make(name: 'tools.recreational-activities.subcategories.recreational-activities-city.enabled')
+                        ->label('recreational-activities-city')
+                        ->default(true)
+                        ->live(),
+
+                    Toggle::make(name: 'tools.recreational-activities.subcategories.recreational-activities-nature.enabled')
+                        ->label('recreational-activities-nature')
+                        ->default(true)
+                        ->live(),
+                ])
+                ->compact()
+                ->collapsible()
+                ->visible(fn (callable $get) => $get('tools.recreational-activities.enabled') === true),
+        ];
+    }
+
+    public static function getToolsResourcesSchema(): array
     {
         return [
             Toggle::make('tools.recreational-activities.enabled')

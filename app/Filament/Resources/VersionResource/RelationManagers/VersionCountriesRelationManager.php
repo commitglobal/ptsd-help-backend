@@ -32,7 +32,7 @@ class VersionCountriesRelationManager extends RelationManager
                     )
                     ->validationMessages([
                         'unique' => 'This country is already associated with this version.',
-                    ])
+                    ]),
             ])
             ->columns(1);
     }

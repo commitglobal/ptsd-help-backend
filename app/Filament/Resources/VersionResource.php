@@ -8,12 +8,10 @@ use App\Enum\VersionStatus;
 use App\Filament\Resources\VersionResource\Actions\ExportAction;
 use App\Filament\Resources\VersionResource\Pages;
 use App\Filament\Resources\VersionResource\RelationManagers\VersionCountriesRelationManager;
-use App\Models\Country;
 use App\Models\Version;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -38,7 +36,7 @@ class VersionResource extends Resource
                     ->schema([
                         DateTimePicker::make('published_at')
                             ->label(__('version.field.published_at'))
-                            ->visible(fn(?Version $record) => $record?->isPublished())
+                            ->visible(fn (?Version $record) => $record?->isPublished())
                             ->disabled()
                             ->native(false)
                             ->timezone('UTC')
@@ -52,7 +50,7 @@ class VersionResource extends Resource
                             ->label(__('version.field.name'))
                             ->maxLength(200)
                             ->required()
-                            ->unique()
+                            ->unique(),
                     ]),
             ]);
     }
@@ -68,12 +66,12 @@ class VersionResource extends Resource
                 TextColumn::make('countries')
                     ->label(__('version.field.countries'))
                     ->badge()
-                    ->getStateUsing(fn(Version $record) => $record->versionCountries->pluck('country.name')->filter()),
+                    ->getStateUsing(fn (Version $record) => $record->versionCountries->pluck('country.name')->filter()),
 
                 TextColumn::make('status')
                     ->label(__('version.field.status'))
                     ->badge()
-                    ->color(fn(VersionStatus $state): string => match ($state) {
+                    ->color(fn (VersionStatus $state): string => match ($state) {
                         VersionStatus::drafted => 'secondary',
                         VersionStatus::archived => 'warning',
                         VersionStatus::published => 'success',
@@ -81,21 +79,21 @@ class VersionResource extends Resource
 
                 TextColumn::make('published_at')
                     ->label(__('version.field.published_at'))
-                    ->formatStateUsing(fn($state) => $state?->toDateTimeString() ?? '-')
+                    ->formatStateUsing(fn ($state) => $state?->toDateTimeString() ?? '-')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
-                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
-                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -112,7 +110,7 @@ class VersionResource extends Resource
             ])
             ->bulkActions([
             ])
-            ->modifyQueryUsing(fn($query) => $query->with('versionCountries.country'));
+            ->modifyQueryUsing(fn ($query) => $query->with('versionCountries.country'));
     }
 
     public static function getRelations(): array

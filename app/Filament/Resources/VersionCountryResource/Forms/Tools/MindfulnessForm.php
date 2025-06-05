@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools;
+namespace App\Filament\Resources\VersionCountryResource\Forms\Tools;
 
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -10,7 +10,49 @@ use Filament\Forms\Components\Toggle;
 
 class MindfulnessForm
 {
-    public static function getSchema(): array
+    public static function getToolsSchema(): array
+    {
+        return
+            [
+                Toggle::make('tools.mindfulness.enabled')
+                    ->label('Mindfulness')
+                    ->default(true)
+                    ->live(),
+                Section::make('Mindfulness Subcategories')
+                    ->schema([
+                        Toggle::make(name: 'tools.mindfulness.subcategories.mindfulness-conscious-breathing.enabled')
+                            ->label('Mindfulness conscious breathing')
+                            ->default(true)
+                            ->live(),
+
+                        Toggle::make(name: 'tools.mindfulness.subcategories.mindfulness-mindful-walking.enabled')
+                            ->label('Mindfulness conscious breathing')
+                            ->default(true)
+                            ->live(),
+
+                        Toggle::make(name: 'tools.mindfulness.subcategories.mindfulness-emotional-discomfort.enabled')
+                            ->label('Mindfulness conscious breathing')
+                            ->default(true)
+                            ->live(),
+
+                        Toggle::make(name: 'tools.mindfulness.subcategories.mindfulness-sense-awareness.enabled')
+                            ->label('Mindfulness conscious breathing')
+                            ->default(true)
+                            ->live(),
+
+                        Toggle::make(name: 'tools.mindfulness.subcategories.mindfulness-loving-kindness.enabled')
+                            ->label('Mindfulness conscious breathing')
+                            ->default(true)
+                            ->live(),
+                    ])
+                    ->compact()
+                    ->collapsible()
+                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
+
+            ];
+    }
+
+    public static function getToolsResourcesSchema(): array
     {
         return
             [

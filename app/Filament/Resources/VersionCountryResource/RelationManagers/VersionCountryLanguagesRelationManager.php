@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\VersionCountryResource\RelationManagers;
 
-use Filament\Forms;
+use App\Models\VersionCountry;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\VersionCountry;
-use Filament\Forms\Components\Select;
-use App\Models\Language;
 
 class VersionCountryLanguagesRelationManager extends RelationManager
 {
@@ -30,12 +28,13 @@ class VersionCountryLanguagesRelationManager extends RelationManager
                             ->get()
                             ->mapWithKeys(function (VersionCountry $vc) {
                                 $label = "{$vc->version->name} - {$vc->country->name}";
+
                                 return [$vc->id => $label];
                             })
                             ->toArray();
                     })
                     ->columnSpan(1),
-                Forms\Components\Select::make('language_id')
+                Select::make('language_id')
                     ->relationship('language', 'name')
                     ->required()
                     ->unique(
@@ -48,7 +47,7 @@ class VersionCountryLanguagesRelationManager extends RelationManager
                     )
                     ->validationMessages([
                         'unique' => 'This country is already associated with this version.',
-                    ])
+                    ]),
             ])->columns(1);
     }
 

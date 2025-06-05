@@ -4,36 +4,17 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Enum\VersionStatus;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\ContentForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Symptoms\SymptomsForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\AmbientSoundsForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\MindfulnessForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\MyFeelingsForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\MyStrengthsForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\PauseForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\RecreationalActivitiesForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\RelationshipsForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\RidForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\SleepForm;
-use App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools\WorryTimeForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Pages;
+use App\Models\VersionCountry;
 use App\Models\VersionCountryLanguage;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use App\Models\VersionCountry;
-use App\Models\Language;
 
 class VersionCountryLanguageResource extends Resource
 {
@@ -56,6 +37,7 @@ class VersionCountryLanguageResource extends Resource
                                     ->get()
                                     ->mapWithKeys(function (VersionCountry $vc) {
                                         $label = "{$vc->version->name} - {$vc->country->name}";
+
                                         return [$vc->id => $label];
                                     })
                                     ->toArray();
@@ -79,15 +61,13 @@ class VersionCountryLanguageResource extends Resource
 
                                     return $rule;
                                 }
-
                             )
                             ->validationMessages([
                                 'unique' => 'This language is already associated with this country.',
-                            ])
+                            ]),
                     ])
                     ->columns(2),
             ]);
-
     }
 
     public static function table(Table $table): Table
@@ -111,8 +91,7 @@ class VersionCountryLanguageResource extends Resource
                 Tables\Grouping\Group::make('version_country_id') // Use the foreign key column for grouping
                     ->label('Version - Country')
                     ->getTitleFromRecordUsing(
-                        fn(VersionCountryLanguage $record) =>
-                        $record->versionCountry->version->name . ' - ' . $record->versionCountry->country->name
+                        fn (VersionCountryLanguage $record) => $record->versionCountry->version->name . ' - ' . $record->versionCountry->country->name
                     )
                     ->collapsible()
             );

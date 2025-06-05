@@ -2,14 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionCountryLanguageResource\Forms\Tools;
+namespace App\Filament\Resources\VersionCountryResource\Forms\Tools;
 
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 
 class RidForm
 {
-    public static function getSchema(): array
+    public static function getToolsSchema(): Field
+    {
+        return
+            Toggle::make('tools.rid.enabled')
+                ->label('RID')
+                ->default(true)
+                ->live();
+    }
+
+    public static function getToolsResourcesSchema(): array
     {
         return [
             Toggle::make('tools.rid.enabled')
