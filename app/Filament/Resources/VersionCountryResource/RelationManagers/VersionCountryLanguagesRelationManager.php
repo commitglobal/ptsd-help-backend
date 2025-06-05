@@ -9,6 +9,9 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Models\VersionCountry;
+use Filament\Forms\Components\Select;
+use App\Models\Language;
 
 class VersionCountryLanguagesRelationManager extends RelationManager
 {
@@ -18,6 +21,20 @@ class VersionCountryLanguagesRelationManager extends RelationManager
     {
         return $form
             ->schema([
+                Select::make('version_country_id')
+                    ->label('Version - Country')
+                    ->required()
+                    ->searchable()
+                    ->options(function () {
+                        return VersionCountry::with(['version', 'country'])
+                            ->get()
+                            ->mapWithKeys(function (VersionCountry $vc) {
+                                $label = "{$vc->version->name} - {$vc->country->name}";
+                                return [$vc->id => $label];
+                            })
+                            ->toArray();
+                    })
+                    ->columnSpan(1),
                 Forms\Components\Select::make('language_id')
                     ->relationship('language', 'name')
                     ->required()

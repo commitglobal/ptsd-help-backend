@@ -22,6 +22,7 @@ use App\Models\VersionCountryLanguage;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -31,6 +32,8 @@ use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\VersionCountry;
+use App\Models\Language;
 
 class VersionCountryLanguageResource extends Resource
 {
@@ -40,158 +43,79 @@ class VersionCountryLanguageResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema(
-            [
-                Card::make()->schema([
-                    Wizard::make([
-                        Wizard\Step::make('Basic Info')
-                            ->schema([
-                                Card::make()->schema([
-                                    Select::make('version_id')
-                                        ->relationship('version', 'name')
-                                        ->required(),
+        return $form
+            ->schema([
+                Grid::make()
+                    ->schema([
+                        Select::make('version_country_id')
+                            ->label('Version - Country')
+                            ->required()
+                            ->searchable()
+                            ->options(function () {
+                                return VersionCountry::with(['version', 'country'])
+                                    ->get()
+                                    ->mapWithKeys(function (VersionCountry $vc) {
+                                        $label = "{$vc->version->name} - {$vc->country->name}";
+                                        return [$vc->id => $label];
+                                    })
+                                    ->toArray();
+                            })
+                            ->columnSpan(1),
+                        Select::make('language_id')
+                            ->relationship('language', 'name')
+                            ->required()
+                            ->unique(
+                                table: 'version_country_language',
+                                column: 'language_id',
+                                ignoreRecord: true,
+                                modifyRuleUsing: function (\Illuminate\Validation\Rules\Unique $rule, $livewire) {
+                                    if ($livewire instanceof \Filament\Resources\Pages\CreateRecord) {
+                                        return $rule->where('version_country_id', $livewire->data['version_country_id']);
+                                    }
 
-                                    Select::make('country_id')
-                                        ->relationship('country', 'name')
-                                        ->required(),
+                                    if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
+                                        return $rule->where('version_country_id', $livewire->record->version_country_id);
+                                    }
 
-                                    Select::make('language_id')
-                                        ->relationship('language', 'name')
-                                        ->required(),
-                                ]),
-                            ]),
+                                    return $rule;
+                                }
 
-                        Wizard\Step::make('Manage > Symptoms')
-                            ->schema([
-                                Card::make()->schema(SymptomsForm::getSchema()),
-                            ]),
+                            )
+                            ->validationMessages([
+                                'unique' => 'This language is already associated with this country.',
+                            ])
+                    ])
+                    ->columns(2),
+            ]);
 
-                        Wizard\Step::make('Manage > Tools')
-                            ->schema([
-                                Card::make()->schema([
-                                    Section::make('Relationships')
-                                        ->schema(RelationshipsForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('Ambient sounds')
-                                        ->schema(AmbientSoundsForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('Mindfulness')
-                                        ->schema(MindfulnessForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('Pause')
-                                        ->schema(PauseForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('My feelings')
-                                        ->schema(MyFeelingsForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('Worry time')
-                                        ->schema(WorryTimeForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('Rid')
-                                        ->schema(RidForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('Recreational activities')
-                                        ->schema(RecreationalActivitiesForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('Sleep')
-                                        ->schema(SleepForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                    Section::make('My strengths')
-                                        ->schema(MyStrengthsForm::getSchema())
-                                        ->collapsible()
-                                        ->collapsed()
-                                        ->compact(),
-
-                                ]),
-                            ]),
-
-                        Wizard\Step::make('Support screen')
-                            ->schema([
-                                Card::make()->schema(ContentForm::getSchema()),
-                            ]),
-
-                        Wizard\Step::make('Learn screen')
-                            ->schema([
-                                Card::make()->schema(ContentForm::getSchema()),
-                            ]),
-
-                        Wizard\Step::make('Track screen')
-                            ->schema([
-                                Card::make()->schema([
-
-                                ]),
-                            ]),
-                    ]),
-                ]),
-            ]
-        );
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('version.name')
-                    ->label('Version')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('country.name')
-                    ->label('Country')
-                    ->sortable()
-                    ->searchable(),
                 TextColumn::make('language.name')
                     ->label('Language')
                     ->sortable()
                     ->searchable(),
             ])
             ->filters([
-                SelectFilter::make('version.status')
-                    ->label('Status')
-                    ->options(VersionStatus::options())
-                    ->query(function (Builder $query, $state) {
-                        if (blank($state['value'])) {
-                            return $query; // No filtering when nothing is selected
-                        }
 
-                        return $query->whereHas('version', function (Builder $subQuery) use ($state) {
-                            $subQuery->where('status', $state);
-                        });
-                    }),
             ])
             ->filtersLayout(FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-            ]);
+            ->defaultGroup(
+                Tables\Grouping\Group::make('version_country_id') // Use the foreign key column for grouping
+                    ->label('Version - Country')
+                    ->getTitleFromRecordUsing(
+                        fn(VersionCountryLanguage $record) =>
+                        $record->versionCountry->version->name . ' - ' . $record->versionCountry->country->name
+                    )
+                    ->collapsible()
+            );
     }
 
     public static function getPages(): array
@@ -202,11 +126,5 @@ class VersionCountryLanguageResource extends Resource
             'view' => Pages\ViewVersionCountryLanguage::route('/{record}'),
             'edit' => Pages\EditVersionCountryLanguage::route('/{record}/edit'),
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->with(['version', 'country', 'language']); // Make sure these are eager loaded
     }
 }

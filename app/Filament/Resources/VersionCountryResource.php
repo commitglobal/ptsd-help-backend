@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\VersionResource\Pages;
+use App\Filament\Resources\VersionCountryResource\Pages;
 use App\Models\Country;
 use App\Models\Version;
 use Filament\Forms\Components\Repeater;
@@ -19,7 +19,9 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\VersionCountryResource\RelationManagers\VersionCountryLanguagesRelationManager;
+use Filament\Tables\Enums\FiltersLayout;
 
+use Filament\Forms\Components\Grid;
 
 use App\Models\VersionCountry;
 use Filament\Forms;
@@ -35,6 +37,40 @@ class VersionCountryResource extends Resource
     {
         return $form
             ->schema([
+                Grid::make()
+                    ->schema([
+                        Select::make('version_id')
+                            ->label('Version')
+                            ->relationship('version', 'name')
+                            ->required()
+                            ->preload()
+                            ->searchable(),
+
+                        Select::make('country_id')
+                            ->relationship('country', 'name')
+                            ->required()
+                            ->unique(
+                                table: 'version_country',
+                                column: 'country_id',
+                                ignoreRecord: true,
+                                modifyRuleUsing: function (\Illuminate\Validation\Rules\Unique $rule, $livewire) {
+                                    if ($livewire instanceof \Filament\Resources\Pages\CreateRecord) {
+                                        return $rule->where('country_id', $livewire->data['country_id']);
+                                    }
+
+                                    if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
+                                        return $rule->where('country_id', $livewire->record->country_id);
+                                    }
+
+                                    return $rule;
+                                }
+
+                            )
+                            ->validationMessages([
+                                'unique' => 'This Country is already associated with this version.',
+                            ])
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -53,7 +89,6 @@ class VersionCountryResource extends Resource
                         $record->countryLanguages
                             ->pluck('language.name')
                             ->filter()
-                            ->join(', ')
                     ),
 
             ])
@@ -68,8 +103,11 @@ class VersionCountryResource extends Resource
                     ->preload()
                     ->label('Filter by Version'),
             ])
+            ->filtersLayout(FiltersLayout::AboveContent)
+
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
             ])
@@ -87,6 +125,7 @@ class VersionCountryResource extends Resource
     {
         return [
             'index' => Pages\ListVersionCountries::route('/'),
+            'create' => Pages\CreateVersionCountry::route('/create'),
             'edit' => Pages\EditVersionCountry::route('/{record}/edit'),
         ];
     }

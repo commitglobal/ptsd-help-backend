@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\VersionResource\Pages;
+namespace App\Filament\Resources\VersionCountryResource\Pages;
 
 use App\Filament\Resources\VersionCountryResource;
 use Filament\Pages\Actions\DeleteAction;

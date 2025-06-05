@@ -11,8 +11,7 @@ class VersionCountryLanguage extends Model
     protected $table = 'version_country_language';
 
     protected $fillable = [
-        'version_id',
-        'country_id',
+        'version_country_id',
         'language_id',
         'tools',
         'symptoms',
