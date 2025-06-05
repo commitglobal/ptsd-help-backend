@@ -13,10 +13,8 @@ class PauseForm
     public static function getToolsSchema(): Field
     {
         return
-            Toggle::make('tools.pause.enabled')
-                ->label('Pause')
-                ->default(true)
-                ->live();
+            Toggle::make('tools.pause')
+                ->label('Pause');
     }
 
     public static function getToolsResourcesSchema(): array
@@ -25,12 +23,12 @@ class PauseForm
             Toggle::make('tools.pause.enabled')
                 ->label('Pause')
                 ->default(true)
-                ->live(),
+                ->default(true),
 
             TextInput::make('tools.pause.categoryIcon')
                 ->label('Category icon')
                 ->url()
-                ->visible(fn (callable $get) => $get('tools.pause.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.pause.enabled') === true),
 
         ];
     }

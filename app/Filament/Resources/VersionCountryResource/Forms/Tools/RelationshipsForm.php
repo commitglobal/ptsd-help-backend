@@ -15,34 +15,25 @@ class RelationshipsForm
         return [
             Toggle::make('tools.relationships.enabled')
                 ->label('Enable Relationships')
-                ->default(true)
                 ->live(),
 
             Section::make('Relationships Subcategories')
                 ->schema([
-                    Toggle::make('tools.relationships.subcategories.relationships-reconnect-with-partner.enabled')
-                        ->label('Reconnect With Partner')
-                        ->default(true)
-                        ->live(),
+                    Toggle::make('tools.relationships.relationships-reconnect-with-partner')
+                        ->label('Reconnect With Partner'),
 
-                    Toggle::make('tools.relationships.subcategories.relationships-positive-communication.enabled')
-                        ->label('Positive Communication')
-                        ->default(true)
-                        ->live(),
+                    Toggle::make('tools.relationships.relationships-positive-communication')
+                        ->label('Positive Communication'),
 
-                    Toggle::make('tools.relationships.subcategories.relationships-i-messages.enabled')
-                        ->label('I-Messages')
-                        ->default(true)
-                        ->live(),
+                    Toggle::make('tools.relationships.relationships-i-messages')
+                        ->label('I-Messages'),
 
-                    Toggle::make('tools.relationships.subcategories.relationships-healthy-arguments.enabled')
+                    Toggle::make('tools.relationships.relationships-healthy-arguments')
                         ->label('Healthy Arguments')
-                        ->default(true)
-                        ->live(),
                 ])
                 ->compact()
                 ->collapsible()
-                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.relationships.enabled') === true),
         ];
     }
 
@@ -52,12 +43,12 @@ class RelationshipsForm
             Toggle::make('tools.relationships.enabled')
                 ->label('Enable Relationships')
                 ->default(true)
-                ->live(),
+                ->default(true),
 
             TextInput::make('tools.relationships.categoryIcon')
                 ->label('Category icon')
                 ->url()
-                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.relationships.enabled') === true),
 
             // subcategories
             Section::make('Reconnect With Partner')
@@ -65,80 +56,80 @@ class RelationshipsForm
                     Toggle::make('tools.relationships.subcategories.relationships-reconnect-with-partner.enabled')
                         ->label('Reconnect With Partner')
                         ->default(true)
-                        ->live(),
+                        ->default(true),
 
                     TextInput::make('tools.relationships.subcategories.relationships-reconnect-with-partner.categoryIcon')
                         ->label('Category icon')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.relationships.subcategories.relationships-reconnect-with-partner.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.relationships.subcategories.relationships-reconnect-with-partner.enabled') === true),
                 ])
                 ->collapsible()
                 ->collapsed()
                 ->compact()
-                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.relationships.enabled') === true),
 
             Section::make('Positive Communication')
                 ->schema([
                     Toggle::make('tools.relationships.subcategories.relationships-positive-communication.enabled')
                         ->label('Positive Communication')
                         ->default(true)
-                        ->live(),
+                        ->default(true),
 
                     TextInput::make('tools.relationships.subcategories.relationships-positive-communication.categoryIcon')
                         ->label('Category icon')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.relationships.subcategories.relationships-positive-communication.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.relationships.subcategories.relationships-positive-communication.enabled') === true),
 
                 ])
                 ->collapsible()
                 ->collapsed()
                 ->compact()
-                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.relationships.enabled') === true),
 
             Section::make('I-Messages')
                 ->schema([
                     Toggle::make('tools.relationships.subcategories.relationships-i-messages.enabled')
                         ->label('I-Messages')
                         ->default(true)
-                        ->live(),
+                        ->default(true),
 
                     TextInput::make('tools.relationships.subcategories.relationships-i-messages.categoryIcon')
                         ->label('Category icon')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.relationships.subcategories.relationships-i-messages.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.relationships.subcategories.relationships-i-messages.enabled') === true),
 
                     TextInput::make('tools.relationships.subcategories.relationships-i-messages.headerImage')
                         ->label('Header image')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.relationships.subcategories.relationships-i-messages.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.relationships.subcategories.relationships-i-messages.enabled') === true),
 
                 ])
                 ->collapsible()
                 ->collapsed()
                 ->compact()
-                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.relationships.enabled') === true),
 
             Section::make('Healthy Arguments')
                 ->schema([
                     Toggle::make('tools.relationships.subcategories.relationships-healthy-arguments.enabled')
                         ->label('Healthy Arguments')
                         ->default(true)
-                        ->live(),
+                        ->default(true),
 
                     TextInput::make('tools.relationships.subcategories.relationships-healthy-arguments.categoryIcon')
                         ->label('Category icon')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.relationships.subcategories.relationships-healthy-arguments.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.relationships.subcategories.relationships-healthy-arguments.enabled') === true),
 
                     TextInput::make('tools.relationships.subcategories.relationships-healthy-arguments.headerImage')
                         ->label('Header image')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.relationships.subcategories.relationships-healthy-arguments.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.relationships.subcategories.relationships-healthy-arguments.enabled') === true),
                 ])
                 ->collapsible()
                 ->collapsed()
                 ->compact()
-                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.relationships.enabled') === true),
         ];
     }
 }

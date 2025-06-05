@@ -15,29 +15,22 @@ class SleepForm
         return [
             Toggle::make('tools.sleep.enabled')
                 ->label('Sleep')
-                ->default(true)
                 ->live(),
 
-            Section::make('Subcategories')
+            Section::make('Sleep Subcategories')
                 ->schema([
-                    Toggle::make(name: 'tools.sleep.subcategories.sleep-help.enabled')
-                        ->label('sleep-help')
-                        ->default(true)
-                        ->live(),
+                    Toggle::make(name: 'tools.sleep.sleep-help')
+                        ->label('sleep-help'),
 
-                    Toggle::make(name: 'tools.sleep.subcategories.sleep-habits.enabled')
-                        ->label('sleep-habits')
-                        ->default(true)
-                        ->live(),
+                    Toggle::make(name: 'tools.sleep.sleep-habits')
+                        ->label('sleep-habits'),
 
-                    Toggle::make(name: 'tools.sleep.subcategories.sleep-perspective.enabled')
-                        ->label('sleep-perspective')
-                        ->default(true)
-                        ->live(),
+                    Toggle::make(name: 'tools.sleep.sleep-perspective')
+                        ->label('sleep-perspective'),
                 ])
                 ->compact()
                 ->collapsible()
-                ->visible(fn (callable $get) => $get('tools.sleep.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.sleep.enabled') === true),
         ];
     }
 
@@ -49,12 +42,12 @@ class SleepForm
                     Toggle::make(name: 'tools.sleep.subcategories.sleep-help.enabled')
                         ->label('sleep-help')
                         ->default(true)
-                        ->live(),
+                        ->default(true),
 
                     TextInput::make('tools.sleep.subcategories.sleep-help.categoryIcon')
                         ->label('Category icon')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.sleep.subcategories.sleep-help.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.sleep.subcategories.sleep-help.enabled') === true),
                 ])
                 ->collapsible()
                 ->collapsed()
@@ -65,12 +58,12 @@ class SleepForm
                     Toggle::make(name: 'tools.sleep.subcategories.sleep-habits.enabled')
                         ->label('sleep-habits')
                         ->default(true)
-                        ->live(),
+                        ->default(true),
 
                     TextInput::make('tools.sleep.subcategories.sleep-habits.categoryIcon')
                         ->label('Category icon')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.sleep.subcategories.sleep-habits.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.sleep.subcategories.sleep-habits.enabled') === true),
                 ])
                 ->collapsible()
                 ->collapsed()
@@ -81,12 +74,12 @@ class SleepForm
                     Toggle::make(name: 'tools.sleep.subcategories.sleep-perspective.enabled')
                         ->label('sleep-perspective')
                         ->default(true)
-                        ->live(),
+                        ->default(true),
 
                     TextInput::make('tools.sleep.subcategories.sleep-perspective.categoryIcon')
                         ->label('Category icon')
                         ->url()
-                        ->visible(fn (callable $get) => $get('tools.sleep.subcategories.sleep-perspective.enabled') === true),
+                        ->visible(fn(callable $get) => $get('tools.sleep.subcategories.sleep-perspective.enabled') === true),
                 ])
                 ->collapsible()
                 ->collapsed()

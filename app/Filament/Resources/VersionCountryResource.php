@@ -80,7 +80,7 @@ class VersionCountryResource extends Resource
                     ->label(__('country.field.languages'))
                     ->badge()
                     ->getStateUsing(
-                        fn (VersionCountry $record) => $record->countryLanguages
+                        fn(VersionCountry $record) => $record->countryLanguages
                             ->pluck('language.name')
                             ->filter()
                     ),
@@ -105,7 +105,7 @@ class VersionCountryResource extends Resource
             ])
             ->bulkActions([
             ])
-            ->modifyQueryUsing(fn ($query) => $query->with('countryLanguages.language'));
+            ->modifyQueryUsing(fn($query) => $query->with('countryLanguages.language'));
     }
 
     public static function getRelations(): array
@@ -121,6 +121,7 @@ class VersionCountryResource extends Resource
             'index' => Pages\ListVersionCountries::route('/'),
             'create' => Pages\CreateVersionCountry::route('/create'),
             'edit' => Pages\EditVersionCountry::route('/{record}/edit'),
+            'view' => Pages\ViewVersionCountry::route('/{record}'),
         ];
     }
 }

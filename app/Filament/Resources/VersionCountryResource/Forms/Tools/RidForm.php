@@ -13,24 +13,20 @@ class RidForm
     public static function getToolsSchema(): Field
     {
         return
-            Toggle::make('tools.rid.enabled')
-                ->label('RID')
-                ->default(true)
-                ->live();
+            Toggle::make('tools.rid')
+                ->label('RID');
     }
 
     public static function getToolsResourcesSchema(): array
     {
         return [
             Toggle::make('tools.rid.enabled')
-                ->label('RID')
-                ->default(true)
-                ->live(),
+                ->label('RID'),
 
             TextInput::make('tools.rid.categoryIcon')
                 ->label('Category icon')
                 ->url()
-                ->visible(fn (callable $get) => $get('tools.rid.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.rid.enabled') === true),
         ];
     }
 }

@@ -15,7 +15,14 @@ class ViewVersionCountry extends ViewRecord
 
     public function getTitle(): string
     {
-        return $this->getRecord()->name;
+        // Eager load the relationships if not already loaded
+        $this->getRecord()->loadMissing(['version', 'country']);
+
+        return sprintf(
+            '%s - %s',
+            $this->getRecord()->version->name,
+            $this->getRecord()->country->name
+        );
     }
 
     protected function getActions(): array

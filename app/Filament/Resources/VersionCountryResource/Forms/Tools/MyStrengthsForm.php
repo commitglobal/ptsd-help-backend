@@ -13,10 +13,8 @@ class MyStrengthsForm
     public static function getToolsSchema(): Field
     {
         return
-            Toggle::make('tools.my-strengths.enabled')
-                ->label('My strengths')
-                ->default(true)
-                ->live();
+            Toggle::make('tools.my-strengths')
+                ->label('My strengths');
     }
 
     public static function getToolsResourcesSchema(): array
@@ -25,12 +23,12 @@ class MyStrengthsForm
             Toggle::make('tools.my-strengths.enabled')
                 ->label('my-strengths')
                 ->default(true)
-                ->live(),
+                ->default(true),
 
             TextInput::make('tools.my-strengths.categoryIcon')
                 ->label('My strengths')
                 ->url()
-                ->visible(fn (callable $get) => $get('tools.my-strengths.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.my-strengths.enabled') === true),
         ];
     }
 }

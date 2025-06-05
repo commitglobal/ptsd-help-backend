@@ -13,24 +13,20 @@ class WorryTimeForm
     public static function getToolsSchema(): Field
     {
         return
-            Toggle::make('tools.worry-time.enabled')
-                ->label('Worry time')
-                ->default(true)
-                ->live();
+            Toggle::make('tools.worry-time')
+                ->label('Worry time');
     }
 
     public static function getToolsResourcesSchema(): array
     {
         return [
             Toggle::make('tools.worry-time.enabled')
-                ->label('Worry time')
-                ->default(true)
-                ->live(),
+                ->label('Worry time'),
 
             TextInput::make('tools.worry-time.categoryIcon')
                 ->label('Category icon')
                 ->url()
-                ->visible(fn (callable $get) => $get('tools.worry-time.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.worry-time.enabled') === true),
         ];
     }
 }

@@ -13,10 +13,8 @@ class MyFeelingsForm
     public static function getToolsSchema(): Field
     {
         return
-            Toggle::make('tools.my-feelings.enabled')
-                ->label('My feelings')
-                ->default(true)
-                ->live();
+            Toggle::make('tools.my-feelings')
+                ->label('My feelings');
     }
 
     public static function getToolsResourcesSchema(): array
@@ -25,12 +23,12 @@ class MyFeelingsForm
             Toggle::make('tools.my-feelings.enabled')
                 ->label('My feelings')
                 ->default(true)
-                ->live(),
+                ->default(true),
 
             TextInput::make('tools.my-feelings.categoryIcon')
                 ->label('Category icon')
                 ->url()
-                ->visible(fn (callable $get) => $get('tools.my-feelings.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.my-feelings.enabled') === true),
         ];
     }
 }
