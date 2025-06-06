@@ -26,71 +26,99 @@ class AmbientSoundsForm
                 ->schema([
                     TextInput::make('tools.ambient-sounds.categoryIcon')
                         ->label('Ambient sounds Category icon')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.headerImage')
                         ->label('Header image')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.BEACH.soundUri')
                         ->label('BEACH soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.BIRDS.soundUri')
                         ->label('BIRDS soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.COUNTRY_ROAD.soundUri')
                         ->label('COUNTRY_ROAD soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.CRICKETS.soundUri')
                         ->label('CRICKETS soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.DRIPPING_WATER.soundUri')
                         ->label('DRIPPING_WATER soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.FOREST.soundUri')
                         ->label('FOREST soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.FROGS.soundUri')
                         ->label('FROGS soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.MARSH.soundUri')
                         ->label('MARSH soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.PUBLIC_POOL.soundUri')
                         ->label('PUBLIC_POOL soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.RAIN.soundUri')
                         ->label('RAIN soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.RUNNING_WATER.soundUri')
                         ->label('RUNNING_WATER soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.STREAM_WATER.soundUri')
                         ->label('STREAM_WATER soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.WATERFALL.soundUri')
                         ->label('WATERFALL soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.ambient-sounds.WIND.soundUri')
                         ->label('WIND soundUri')
-                        ->url(),
+                        ->url()
+                        ->required(),
                 ])
-                ->visible(function ($livewire) {
-                    // dd($livewire->getRecord()->versionCountry->tools);
-                    return $livewire->getRecord()->versionCountry->tools['ambient-sounds'] === true;
-                });
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['ambient-sounds'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (!$versionCountryId)
+                        return false;
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                    return $versionCountry?->tools['ambient-sounds'] === true;
+                })
+                ->collapsible()
+                ->compact();
     }
 }

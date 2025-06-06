@@ -23,8 +23,20 @@ class MyFeelingsForm
             TextInput::make('tools.my-feelings.categoryIcon')
                 ->label('My feelings Category icon')
                 ->url()
-                ->visible(function ($livewire) {
-                    return $livewire->getRecord()->versionCountry->tools['my-feelings'] === true;
+                ->required()
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['my-feelings'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (!$versionCountryId)
+                        return false;
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                    return $versionCountry?->tools['mindfulness'] === true;
                 });
     }
 }

@@ -23,8 +23,20 @@ class RidForm
             TextInput::make('tools.rid.categoryIcon')
                 ->label('RID Category icon')
                 ->url()
-                ->visible(function ($livewire) {
-                    return $livewire->getRecord()->versionCountry->tools['rid'] === true;
+                ->required()
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['rid'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (!$versionCountryId)
+                        return false;
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                    return $versionCountry?->tools['rid'] === true;
                 });
     }
 }

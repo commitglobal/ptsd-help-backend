@@ -17,8 +17,8 @@ class ViewVersionCountryLanguage extends ViewRecord
     {
         $record = $this->getRecord();
 
-        $versionName = $record->version->name ?? 'Unknown Version';
-        $countryName = $record->country->name ?? 'Unknown Country';
+        $versionName = $record->countryVersion->version->name ?? 'Unknown Version';
+        $countryName = $record->countryVersion->country->name ?? 'Unknown Country';
         $languageName = $record->language->name ?? 'Unknown Language';
 
         return "{$versionName} / {$countryName} / {$languageName}";

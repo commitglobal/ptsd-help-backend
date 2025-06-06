@@ -23,8 +23,20 @@ class WorryTimeForm
             TextInput::make('tools.worry-time.categoryIcon')
                 ->label('Worry time Category icon')
                 ->url()
-                ->visible(function ($livewire) {
-                    return $livewire->getRecord()->versionCountry->tools['worry-time'] === true;
+                ->required()
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['worry-time'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (!$versionCountryId)
+                        return false;
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                    return $versionCountry?->tools['worry-time'] === true;
                 });
     }
 }

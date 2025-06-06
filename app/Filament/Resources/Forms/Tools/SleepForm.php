@@ -31,7 +31,7 @@ class SleepForm
                 ])
                 ->compact()
                 ->collapsible()
-                ->visible(fn (callable $get) => $get('tools.sleep.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.sleep.enabled') === true),
         ];
     }
 
@@ -42,31 +42,81 @@ class SleepForm
                 ->schema([
                     TextInput::make('tools.sleep.categoryIcon')
                         ->label('Sleep category icon')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.sleep.sleep-help.categoryIcon')
                         ->label('Sleep help Category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['sleep']['sleep-help'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['sleep']['sleep-help'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['sleep']['sleep-help'] === true;
                         }),
 
                     TextInput::make('tools.sleep.sleep-habits.categoryIcon')
                         ->label('Sleep habits Category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['sleep']['sleep-habits'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['sleep']['sleep-habits'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['sleep']['sleep-habits'] === true;
                         }),
 
                     TextInput::make('tools.sleep.sleep-perspective.categoryIcon')
                         ->label('Sleep perspective Category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['sleep']['sleep-perspective'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['sleep']['sleep-perspective'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['sleep']['sleep-perspective'] === true;
                         }),
                 ])
-                ->visible(function ($livewire) {
-                    return $livewire->getRecord()->versionCountry->tools['sleep']['enabled'] === true;
-                });
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['sleep']['enabled'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (!$versionCountryId)
+                        return false;
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                    return $versionCountry?->tools['sleep']['enabled'] === true;
+                })
+                ->collapsible()
+                ->compact();
     }
 }

@@ -16,9 +16,19 @@ class EditVersionCountryLanguage extends EditRecord
     protected function getActions(): array
     {
         return [
-            EditAction::make(),
             DeleteAction::make(),
         ];
+    }
+
+    public function getTitle(): string
+    {
+        $record = $this->getRecord();
+
+        $versionName = $record->versionCountry->version->name ?? 'Unknown Version';
+        $countryName = $record->versionCountry->country->name ?? 'Unknown Country';
+        $languageName = $record->language->name ?? 'Unknown Language';
+
+        return "{$versionName} / {$countryName} / {$languageName}";
     }
 
     protected function getRedirectUrl(): ?string

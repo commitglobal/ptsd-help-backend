@@ -38,7 +38,7 @@ class MindfulnessForm
                     ])
                     ->compact()
                     ->collapsible()
-                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
+                    ->visible(fn(callable $get) => $get('tools.mindfulness.enabled') === true),
 
             ];
     }
@@ -50,97 +50,185 @@ class MindfulnessForm
                 TextInput::make('tools.mindfulness.categoryIcon')
                     ->label('Mindfulness Category icon')
                     ->url()
-                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
+                    ->required()
+                    ->visible(function ($get, $livewire) {
+                        // For existing records (edit)
+                        if ($record = $livewire->getRecord()) {
+                            return $record->versionCountry?->tools['mindfulness']['enabled'] === true;
+                        }
 
-                Section::make('mindfulness-conscious-breathing')
+                        // For new records (create)
+                        $versionCountryId = $get('version_country_id');
+                        if (!$versionCountryId)
+                            return false;
+
+                        $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                        return $versionCountry?->tools['mindfulness']['enabled'] === true;
+                    }),
+
+                Section::make('Conscious Breathing')
                     ->schema([
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-conscious-breathing.categoryIcon')
+                        TextInput::make('tools.mindfulness.mindfulness-conscious-breathing.categoryIcon')
                             ->label('Category icon')
                             ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-conscious-breathing.enabled') === true),
+                            ->required(),
 
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-conscious-breathing.soundURI')
-                            ->label('mindfulness-conscious-breathing sound uri')
+                        TextInput::make('tools.mindfulness.mindfulness-conscious-breathing.soundURI')
+                            ->label('Sound uri')
                             ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-conscious-breathing.enabled') === true),
+                            ->required()
+                    ])
+                    ->collapsible()
+                    ->compact()
+                    ->visible(function ($get, $livewire) {
+                        // For existing records (edit)
+                        if ($record = $livewire->getRecord()) {
+                            return $record->versionCountry?->tools['mindfulness']['mindfulness-conscious-breathing'] === true;
+                        }
 
+                        // For new records (create)
+                        $versionCountryId = $get('version_country_id');
+                        if (!$versionCountryId)
+                            return false;
+
+                        $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                        return $versionCountry?->tools['mindfulness']['mindfulness-conscious-breathing'] === true;
+                    }),
+
+                Section::make('Mindful walking')
+                    ->schema([
+                        TextInput::make('tools.mindfulness.mindfulness-mindful-walking.categoryIcon')
+                            ->label('Category icon')
+                            ->url()
+                            ->required(),
+
+                        TextInput::make('tools.mindfulness.mindfulness-mindful-walking.soundURI')
+                            ->label('Sound uri')
+                            ->url()
+                            ->required()
+                    ])
+                    ->collapsible()
+                    ->compact()
+                    ->visible(function ($get, $livewire) {
+                        // For existing records (edit)
+                        if ($record = $livewire->getRecord()) {
+                            return $record->versionCountry?->tools['mindfulness']['mindfulness-mindful-walking'] === true;
+                        }
+
+                        // For new records (create)
+                        $versionCountryId = $get('version_country_id');
+                        if (!$versionCountryId)
+                            return false;
+
+                        $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                        return $versionCountry?->tools['mindfulness']['mindfulness-mindful-walking'] === true;
+                    }),
+
+                Section::make('Emotional Discomfort')
+                    ->schema([
+                        TextInput::make('tools.mindfulness.mindfulness-emotional-discomfort.categoryIcon')
+                            ->label('Category icon')
+                            ->url()
+                            ->required(),
+
+                        TextInput::make('tools.mindfulness.mindfulness-emotional-discomfort.soundURI')
+                            ->label('Sound uri')
+                            ->url()
+                            ->required()
+                    ])
+                    ->collapsible()
+                    ->compact()
+                    ->visible(function ($get, $livewire) {
+                        // For existing records (edit)
+                        if ($record = $livewire->getRecord()) {
+                            return $record->versionCountry?->tools['mindfulness']['mindfulness-emotional-discomfort'] === true;
+                        }
+
+                        // For new records (create)
+                        $versionCountryId = $get('version_country_id');
+                        if (!$versionCountryId)
+                            return false;
+
+                        $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                        return $versionCountry?->tools['mindfulness']['mindfulness-emotional-discomfort'] === true;
+                    }),
+
+                Section::make('Sense Awareness')
+                    ->schema([
+                        TextInput::make('tools.mindfulness.mindfulness-sense-awareness.categoryIcon')
+                            ->label('Category icon')
+                            ->url()
+                            ->required(),
+
+                        TextInput::make('tools.mindfulness.mindfulness-sense-awareness.soundURI')
+                            ->label('Sound uri')
+                            ->url()
+                            ->required()
                     ])
                     ->collapsible()
                     ->collapsed()
                     ->compact()
-                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
+                    ->visible(function ($get, $livewire) {
+                        // For existing records (edit)
+                        if ($record = $livewire->getRecord()) {
+                            return $record->versionCountry?->tools['mindfulness']['mindfulness-sense-awareness'] === true;
+                        }
 
-                Section::make('mindfulness-mindful-walking')
+                        // For new records (create)
+                        $versionCountryId = $get('version_country_id');
+                        if (!$versionCountryId)
+                            return false;
+
+                        $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                        return $versionCountry?->tools['mindfulness']['mindfulness-sense-awareness'] === true;
+                    }),
+
+                Section::make('Mindfulness loving kindness')
                     ->schema([
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-mindful-walking.categoryIcon')
+                        TextInput::make('tools.mindfulness.mindfulness-loving-kindness.categoryIcon')
                             ->label('Category icon')
                             ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-mindful-walking.enabled') === true),
+                            ->required(),
 
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-mindful-walking.soundURI')
-                            ->label('mindfulness-mindful-walking sound uri')
+                        TextInput::make('tools.mindfulness.mindfulness-loving-kindness.soundURI')
+                            ->label('Sound uri')
                             ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-mindful-walking.enabled') === true),
+                            ->required()
 
                     ])
                     ->collapsible()
-                    ->collapsed()
                     ->compact()
-                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
+                    ->visible(function ($get, $livewire) {
+                        // For existing records (edit)
+                        if ($record = $livewire->getRecord()) {
+                            return $record->versionCountry?->tools['mindfulness']['mindfulness-loving-kindness'] === true;
+                        }
 
-                Section::make('mindfulness-emotional-discomfort')
-                    ->schema([
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-emotional-discomfort.categoryIcon')
-                            ->label('Category icon')
-                            ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-emotional-discomfort.enabled') === true),
+                        // For new records (create)
+                        $versionCountryId = $get('version_country_id');
+                        if (!$versionCountryId)
+                            return false;
 
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-emotional-discomfort.soundURI')
-                            ->label('mindfulness-emotional-discomfort sound uri')
-                            ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-emotional-discomfort.enabled') === true),
-                    ])
-                    ->collapsible()
-                    ->collapsed()
-                    ->compact()
-                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
+                        $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                        return $versionCountry?->tools['mindfulness']['mindfulness-loving-kindness'] === true;
+                    })
 
-                Section::make('mindfulness-sense-awareness')
-                    ->schema([
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-sense-awareness.categoryIcon')
-                            ->label('Category icon')
-                            ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-sense-awareness.enabled') === true),
-
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-sense-awareness.soundURI')
-                            ->label('mindfulness-sense-awareness sound uri')
-                            ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-sense-awareness.enabled') === true),
-
-                    ])
-                    ->collapsible()
-                    ->collapsed()
-                    ->compact()
-                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
-
-                Section::make('mindfulness-loving-kindness')
-                    ->schema([
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-loving-kindness.categoryIcon')
-                            ->label('Category icon')
-                            ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-loving-kindness.enabled') === true),
-
-                        TextInput::make('tools.mindfulness.subcategories.mindfulness-loving-kindness.soundURI')
-                            ->label('mindfulness-loving-kindness sound uri')
-                            ->url()
-                            ->visible(fn (callable $get) => $get('tools.mindfulness.subcategories.mindfulness-loving-kindness.enabled') === true),
-
-                    ])
-                    ->collapsible()
-                    ->collapsed()
-                    ->compact()
-                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
             ])
-            ->visible(fn (callable $get) => $get('tools.mindfulness.enabled.enabled') === true);
+            ->visible(function ($get, $livewire) {
+                // For existing records (edit)
+                if ($record = $livewire->getRecord()) {
+                    return $record->versionCountry?->tools['mindfulness']['enabled'] === true;
+                }
+
+                // For new records (create)
+                $versionCountryId = $get('version_country_id');
+                if (!$versionCountryId)
+                    return false;
+
+                $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                return $versionCountry?->tools['mindfulness']['enabled'] === true;
+            })
+            ->collapsible()
+            ->compact();
     }
 }

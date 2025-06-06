@@ -22,8 +22,20 @@ class PauseForm
         return TextInput::make('tools.pause.categoryIcon')
             ->label('Pause category icon')
             ->url()
-            ->visible(function ($livewire) {
-                return $livewire->getRecord()->versionCountry->tools['pause'] === true;
+            ->required()
+            ->visible(function ($get, $livewire) {
+                // For existing records (edit)
+                if ($record = $livewire->getRecord()) {
+                    return $record->versionCountry?->tools['pause'] === true;
+                }
+
+                // For new records (create)
+                $versionCountryId = $get('version_country_id');
+                if (!$versionCountryId)
+                    return false;
+
+                $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                return $versionCountry?->tools['pause'] === true;
             });
     }
 }

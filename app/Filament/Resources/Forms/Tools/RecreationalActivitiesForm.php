@@ -31,7 +31,7 @@ class RecreationalActivitiesForm
                 ])
                 ->compact()
                 ->collapsible()
-                ->visible(fn (callable $get) => $get('tools.recreational-activities.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.recreational-activities.enabled') === true),
         ];
     }
 
@@ -42,32 +42,82 @@ class RecreationalActivitiesForm
                 ->schema([
                     TextInput::make('tools.recreational-activities.categoryIcon')
                         ->label('Recreational activities category icon')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make(name: 'tools.recreational-activities.recreational-activities-alone.categoryIcon')
                         ->label('Recreational activities alone category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['recreational-activities']['recreational-activities-alone'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['recreational-activities']['recreational-activities-alone'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['recreational-activities']['recreational-activities-alone'] === true;
                         }),
 
                     TextInput::make('tools.recreational-activities.recreational-activities-city.categoryIcon')
                         ->label('Recreational activities city category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['recreational-activities']['recreational-activities-city'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['recreational-activities']['recreational-activities-city'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['recreational-activities']['recreational-activities-city'] === true;
                         }),
 
                     TextInput::make('tools.recreational-activities.recreational-activities-nature.categoryIcon')
                         ->label('Recreational activities nature category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['recreational-activities']['recreational-activities-nature'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['recreational-activities']['recreational-activities-nature'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['recreational-activities']['recreational-activities-nature'] === true;
                         }),
 
                 ])
-                ->visible(function ($livewire) {
-                    return $livewire->getRecord()->versionCountry->tools['recreational-activities']['enabled'] === true;
-                });
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['recreational-activities']['enabled'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (!$versionCountryId)
+                        return false;
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                    return $versionCountry?->tools['recreational-activities']['enabled'] === true;
+                })
+                ->collapsible()
+                ->compact();
     }
 }

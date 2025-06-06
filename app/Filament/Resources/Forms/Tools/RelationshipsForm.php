@@ -34,7 +34,7 @@ class RelationshipsForm
                 ])
                 ->compact()
                 ->collapsible()
-                ->visible(fn (callable $get) => $get('tools.relationships.enabled') === true),
+                ->visible(fn(callable $get) => $get('tools.relationships.enabled') === true),
         ];
     }
 
@@ -45,57 +45,121 @@ class RelationshipsForm
                 ->schema([
                     TextInput::make(name: 'tools.relationships.categoryIcon')
                         ->label('Relationships Category icon')
-                        ->url(),
+                        ->url()
+                        ->required(),
 
                     TextInput::make('tools.relationships.relationships-reconnect-with-partner.categoryIcon')
                         ->label('Reconnect With Partner Category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['relationships']['relationships-reconnect-with-partner'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['relationships']['relationships-reconnect-with-partner'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['relationships']['relationships-reconnect-with-partner'] === true;
                         }),
 
                     TextInput::make('tools.relationships.relationships-positive-communication.categoryIcon')
-                        ->label(' Positive Communication Category icon')
+                        ->label('Positive Communication Category icon')
                         ->url()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['relationships']['relationships-positive-communication'] === true;
+                        ->required()
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['relationships']['relationships-positive-communication'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['relationships']['relationships-positive-communication'] === true;
                         }),
 
                     Section::make('I-Messages')
                         ->schema([
                             TextInput::make('tools.relationships.relationships-i-messages.categoryIcon')
                                 ->label('Category icon')
-                                ->url(),
+                                ->url()
+                                ->required(),
 
                             TextInput::make('tools.relationships.relationships-i-messages.headerImage')
                                 ->label('Header image')
-                                ->url(),
+                                ->url()
+                                ->required(),
                         ])
                         ->collapsible()
                         ->compact()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['relationships']['relationships-i-messages'] === true;
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['relationships']['relationships-i-messages'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['relationships']['relationships-i-messages'] === true;
                         }),
 
                     Section::make('Healthy Arguments')
                         ->schema([
                             TextInput::make('tools.relationships.relationships-healthy-arguments.categoryIcon')
                                 ->label('Category icon')
-                                ->url(),
+                                ->url()
+                                ->required(),
 
                             TextInput::make('tools.relationships.relationships-healthy-arguments.headerImage')
                                 ->label('Header image')
-                                ->url(),
+                                ->url()
+                                ->required(),
                         ])
                         ->collapsible()
                         ->compact()
-                        ->visible(function ($livewire) {
-                            return $livewire->getRecord()->versionCountry->tools['relationships']['relationships-healthy-arguments'] === true;
+                        ->visible(function ($get, $livewire) {
+                            // For existing records (edit)
+                            if ($record = $livewire->getRecord()) {
+                                return $record->versionCountry?->tools['relationships']['relationships-healthy-arguments'] === true;
+                            }
+
+                            // For new records (create)
+                            $versionCountryId = $get('version_country_id');
+                            if (!$versionCountryId)
+                                return false;
+
+                            $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                            return $versionCountry?->tools['relationships']['relationships-healthy-arguments'] === true;
                         }),
 
                 ])
-                ->visible(function ($livewire) {
-                    return $livewire->getRecord()->versionCountry->tools['relationships']['enabled'] === true;
-                });
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['relationships']['enabled'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (!$versionCountryId)
+                        return false;
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+                    return $versionCountry?->tools['relationships']['enabled'] === true;
+                })
+                ->collapsible()
+                ->compact();
     }
 }
