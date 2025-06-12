@@ -27,6 +27,8 @@ class VersionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?int $navigationSort = 3;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -36,7 +38,7 @@ class VersionResource extends Resource
                     ->schema([
                         DateTimePicker::make('published_at')
                             ->label(__('version.field.published_at'))
-                            ->visible(fn (?Version $record) => $record?->isPublished())
+                            ->visible(fn(?Version $record) => $record?->isPublished())
                             ->disabled()
                             ->native(false)
                             ->timezone('UTC')
@@ -66,12 +68,12 @@ class VersionResource extends Resource
                 TextColumn::make('countries')
                     ->label(__('version.field.countries'))
                     ->badge()
-                    ->getStateUsing(fn (Version $record) => $record->versionCountries->pluck('country.name')->filter()),
+                    ->getStateUsing(fn(Version $record) => $record->versionCountries->pluck('country.name')->filter()),
 
                 TextColumn::make('status')
                     ->label(__('version.field.status'))
                     ->badge()
-                    ->color(fn (VersionStatus $state): string => match ($state) {
+                    ->color(fn(VersionStatus $state): string => match ($state) {
                         VersionStatus::drafted => 'secondary',
                         VersionStatus::archived => 'warning',
                         VersionStatus::published => 'success',
@@ -79,21 +81,21 @@ class VersionResource extends Resource
 
                 TextColumn::make('published_at')
                     ->label(__('version.field.published_at'))
-                    ->formatStateUsing(fn ($state) => $state?->toDateTimeString() ?? '-')
+                    ->formatStateUsing(fn($state) => $state?->toDateTimeString() ?? '-')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label(__('general.created_at'))
-                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('general.updated_at'))
-                    ->formatStateUsing(fn ($state) => $state->toDateTimeString())
+                    ->formatStateUsing(fn($state) => $state->toDateTimeString())
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -106,11 +108,12 @@ class VersionResource extends Resource
             ->filtersLayout(FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
                 ExportAction::make(),
             ])
             ->bulkActions([
             ])
-            ->modifyQueryUsing(fn ($query) => $query->with('versionCountries.country'));
+            ->modifyQueryUsing(fn($query) => $query->with('versionCountries.country'));
     }
 
     public static function getRelations(): array

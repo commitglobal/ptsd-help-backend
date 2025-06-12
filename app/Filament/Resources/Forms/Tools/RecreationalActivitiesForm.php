@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Forms\Tools;
 
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 
 class RecreationalActivitiesForm
 {
-    public static function getToolsSchema(): array
+    public static function getSchema(): array
     {
         return [
             Toggle::make(name: 'tools.recreational-activities.enabled')
@@ -31,11 +32,11 @@ class RecreationalActivitiesForm
                 ])
                 ->compact()
                 ->collapsible()
-                ->visible(fn(callable $get) => $get('tools.recreational-activities.enabled') === true),
+                ->visible(fn (callable $get) => $get('tools.recreational-activities.enabled') === true),
         ];
     }
 
-    public static function getToolsResourcesSchema(): Component
+    public static function getMediaSchema(): Component
     {
         return
             Section::make('Recreational activities resources')
@@ -57,10 +58,12 @@ class RecreationalActivitiesForm
 
                             // For new records (create)
                             $versionCountryId = $get('version_country_id');
-                            if (!$versionCountryId)
+                            if (! $versionCountryId) {
                                 return false;
+                            }
 
                             $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                             return $versionCountry?->tools['recreational-activities']['recreational-activities-alone'] === true;
                         }),
 
@@ -76,10 +79,12 @@ class RecreationalActivitiesForm
 
                             // For new records (create)
                             $versionCountryId = $get('version_country_id');
-                            if (!$versionCountryId)
+                            if (! $versionCountryId) {
                                 return false;
+                            }
 
                             $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                             return $versionCountry?->tools['recreational-activities']['recreational-activities-city'] === true;
                         }),
 
@@ -95,10 +100,12 @@ class RecreationalActivitiesForm
 
                             // For new records (create)
                             $versionCountryId = $get('version_country_id');
-                            if (!$versionCountryId)
+                            if (! $versionCountryId) {
                                 return false;
+                            }
 
                             $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                             return $versionCountry?->tools['recreational-activities']['recreational-activities-nature'] === true;
                         }),
 
@@ -111,13 +118,141 @@ class RecreationalActivitiesForm
 
                     // For new records (create)
                     $versionCountryId = $get('version_country_id');
-                    if (!$versionCountryId)
+                    if (! $versionCountryId) {
                         return false;
+                    }
 
                     $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                     return $versionCountry?->tools['recreational-activities']['enabled'] === true;
                 })
                 ->collapsible()
                 ->compact();
+    }
+
+    public static function getContentSchema(): array
+    {
+        return [
+            TextInput::make('tools.recreational-activities.label')
+                ->label('Recreational activities category label')
+                ->required(),
+
+            Section::make()
+                ->label('Recreational activities alone')
+                ->schema([
+                    TextInput::make('tools.recreational-activities-alone.label')
+                        ->label('Label')
+                        ->required(),
+
+                    TextInput::make('tools.recreational-activities-alone.title')
+                        ->label('Title')
+                        ->required(),
+
+                    Repeater::make('tools.recreational-activities-alone.repeater')
+                        ->label('Activities')
+                        ->simple(
+                            TextInput::make('description')
+                                ->label('Recreational activity')
+                                ->required(),
+                        )
+                        ->defaultItems(3)
+                        ->reorderable()
+                        ->deletable()
+                        ->addActionLabel('Add recreational activity')
+                        ->minItems(1),
+
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['recreational-activities']['recreational-activities-alone'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['recreational-activities']['recreational-activities-alone'] === true;
+                }),
+
+            Section::make()
+                ->label('Recreational activities city')
+                ->schema([
+                    TextInput::make('tools.recreational-activities-city.title')
+                        ->label('Title')
+                        ->required(),
+
+                    Repeater::make('tools.recreational-activities-city.repeater')
+                        ->label('Activities')
+                        ->simple(
+                            TextInput::make('description')
+                                ->label('Recreational activity')
+                                ->required(),
+                        )
+                        ->defaultItems(3)
+                        ->reorderable()
+                        ->deletable()
+                        ->addActionLabel('Add recreational activity')
+                        ->minItems(1),
+
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['recreational-activities']['recreational-activities-city'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['recreational-activities']['recreational-activities-city'] === true;
+                }),
+
+            Section::make()
+                ->label('Recreational activities nature')
+                ->schema([
+                    TextInput::make('tools.recreational-activities-city.title')
+                        ->label('Title')
+                        ->required(),
+
+                    Repeater::make('tools.recreational-activities-city.repeater')
+                        ->label('Activities')
+                        ->simple(
+                            TextInput::make('description')
+                                ->label('Recreational activity')
+                                ->required(),
+                        )
+                        ->defaultItems(3)
+                        ->reorderable()
+                        ->deletable()
+                        ->addActionLabel('Add recreational activity')
+                        ->minItems(1),
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['recreational-activities']['recreational-activities-nature'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['recreational-activities']['recreational-activities-nature'] === true;
+                }),
+        ];
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Forms\ToolsForm;
 use App\Filament\Resources\VersionCountryResource\Pages;
 use App\Filament\Resources\VersionCountryResource\RelationManagers\VersionCountryLanguagesRelationManager;
 use App\Models\VersionCountry;
@@ -22,6 +23,8 @@ class VersionCountryResource extends Resource
     protected static ?string $model = VersionCountry::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
+
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
@@ -60,7 +63,7 @@ class VersionCountryResource extends Resource
                 Card::make()
                     ->heading('Tools Settings') // Alternative to label with different styling
                     ->description('Configure the available tools for this version-country combination')
-                    ->schema(VersionCountryResource\Forms\ToolsForm::getToolsSchema()),
+                    ->schema(ToolsForm::getToolsSchema()),
             ]);
     }
 
@@ -75,7 +78,7 @@ class VersionCountryResource extends Resource
                     ->label(__('country.field.languages'))
                     ->badge()
                     ->getStateUsing(
-                        fn (VersionCountry $record) => $record->countryLanguages
+                        fn(VersionCountry $record) => $record->countryLanguages
                             ->pluck('language.name')
                             ->filter()
                     ),
@@ -95,12 +98,13 @@ class VersionCountryResource extends Resource
             ->filtersLayout(FiltersLayout::AboveContent)
 
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
             ])
-            ->modifyQueryUsing(fn ($query) => $query->with('countryLanguages.language'));
+            ->modifyQueryUsing(fn($query) => $query->with('countryLanguages.language'));
     }
 
     public static function getRelations(): array

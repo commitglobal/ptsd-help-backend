@@ -4,29 +4,42 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Forms\Tools\AmbientSoundsForm;
+use App\Filament\Resources\Forms\Tools\FeelingsForm;
+use App\Filament\Resources\Forms\Tools\MindfulnessForm;
+use App\Filament\Resources\Forms\Tools\MyFeelingsForm;
+use App\Filament\Resources\Forms\Tools\MyStrengthsForm;
+use App\Filament\Resources\Forms\Tools\PauseForm;
+use App\Filament\Resources\Forms\Tools\RecreationalActivitiesForm;
+use App\Filament\Resources\Forms\Tools\RelationshipsForm;
+use App\Filament\Resources\Forms\Tools\RidForm;
+use App\Filament\Resources\Forms\Tools\SleepForm;
+use App\Filament\Resources\Forms\Tools\WorryTimeForm;
+use App\Filament\Resources\Forms\ToolsForm;
+use App\Filament\Resources\VersionCountryLanguageResource\Forms\SymptomsForm;
 use App\Filament\Resources\VersionCountryLanguageResource\Pages;
 use App\Models\VersionCountry;
-use App\Models\Country;
-use App\Models\Version;
 use App\Models\VersionCountryLanguage;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\Action;
-use Filament\Notifications\Notification;
 
 class VersionCountryLanguageResource extends Resource
 {
     protected static ?string $model = VersionCountryLanguage::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
@@ -49,7 +62,6 @@ class VersionCountryLanguageResource extends Resource
                         return $record?->versionCountry != null;
                     }),
 
-
                 Select::make('version_country_id')
                     ->label('Version - Country')
                     ->required()
@@ -62,6 +74,7 @@ class VersionCountryLanguageResource extends Resource
                             ->map(function ($group) {
                                 return $group->mapWithKeys(function (VersionCountry $vc) {
                                     $label = "{$vc->version->name} / {$vc->country->name}";
+
                                     return [$vc->id => $label];
                                 });
                             })
@@ -87,11 +100,49 @@ class VersionCountryLanguageResource extends Resource
                             if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
                                 return $rule->where('version_country_id', $livewire->record->version_country_id);
                             }
+
                             return $rule;
                         }
                     )
                     ->validationMessages([
                         'unique' => 'This language is already associated with this country.',
+                    ]),
+
+                Card::make()
+                    ->heading(heading: 'Media management')
+                    ->description('Configure the available media for the current version/country/language')
+                    ->schema([
+
+                        Tabs::make('Form Tabs')
+                            ->tabs([
+
+                                Tabs\Tab::make('Manage > Symptoms')
+                                    ->schema(components: SymptomsForm::getMediaSchema()),
+
+                                Tabs\Tab::make('Manage > Tools')
+                                    ->schema(ToolsForm::getToolsMediaSchema()),
+
+                                Tabs\Tab::make('Support screen')
+                                    ->schema([
+                                        Card::make()->schema([
+
+                                        ]),
+                                    ]),
+
+                                Tabs\Tab::make('Learn screen')
+                                    ->schema([
+                                        Card::make()->schema([
+
+                                        ]),
+                                    ]),
+
+                                Tabs\Tab::make('Track screen')
+                                    ->schema([
+                                        Card::make()->schema([
+
+                                        ]),
+                                    ]),
+                            ]),
                     ]),
 
                 Card::make()
@@ -103,14 +154,203 @@ class VersionCountryLanguageResource extends Resource
                             ->tabs([
 
                                 Tabs\Tab::make('Manage > Symptoms')
-                                    ->schema([
-                                        Card::make()->schema([
-
-                                        ]),
-                                    ]),
+                                    ->schema(components: SymptomsForm::getContentSchema()),
 
                                 Tabs\Tab::make('Manage > Tools')
-                                    ->schema(VersionCountryResource\Forms\ToolsForm::getToolsResourcesSchema()),
+                                    ->schema(ToolsForm::getContentSchema()),
+
+                                Tabs\Tab::make('Manage > Tools > Ambient sounds')
+                                    ->schema(AmbientSoundsForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['ambient-sounds'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['ambient-sounds'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > Mindfulness')
+                                    ->schema(MindfulnessForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['mindfulness']['enabled'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['mindfulness']['enabled'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > Feelings ')
+                                    ->schema(FeelingsForm::getContentSchema()),
+
+                                Tabs\Tab::make('Manage > Tools > My feelings')
+                                    ->schema(MyFeelingsForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['my-feelings'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['my-feelings'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > My strengths')
+                                    ->schema(MyStrengthsForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['my-strengths'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['my-strengths'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > Pause')
+                                    ->schema(PauseForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['pause'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['pause'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > Recreational Activities')
+                                    ->schema(RecreationalActivitiesForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['recreational-activities']['enabled'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['recreational-activities']['enabled'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > Relationships')
+                                    ->schema(RelationshipsForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['relationships']['enabled'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['relationships']['enabled'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > RID')
+                                    ->schema(RidForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['rid'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['rid'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > Sleep')
+                                    ->schema(SleepForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['sleep']['enabled'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['sleep']['enabled'] === true;
+                                    }),
+
+                                Tabs\Tab::make('Manage > Tools > Worry time')
+                                    ->schema(WorryTimeForm::getContentSchema())
+                                    ->visible(function ($get, $livewire) {
+                                        // For existing records (edit)
+                                        if ($record = $livewire->getRecord()) {
+                                            return $record->versionCountry?->tools['worry-time'] === true;
+                                        }
+
+                                        // For new records (create)
+                                        $versionCountryId = $get('version_country_id');
+                                        if (!$versionCountryId) {
+                                            return false;
+                                        }
+
+                                        $versionCountry = VersionCountry::find($versionCountryId);
+
+                                        return $versionCountry?->tools['worry-time'] === true;
+                                    }),
 
                                 Tabs\Tab::make('Support screen')
                                     ->schema([
@@ -194,13 +434,14 @@ class VersionCountryLanguageResource extends Resource
                                             if ($livewire instanceof \Filament\Resources\Pages\EditRecord) {
                                                 return $rule->where('version_country_id', $livewire->record->version_country_id);
                                             }
+
                                             return $rule;
                                         }
                                     )
                                     ->validationMessages([
                                         'unique' => 'This language is already associated with this country.',
                                     ])->columnSpanFull(),
-                            ])
+                            ]),
                     ])
                     ->action(function (VersionCountryLanguage $record) {
                         $newRecord = $record->replicate();

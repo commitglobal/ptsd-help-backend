@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Forms\Tools;
 
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 
 class MindfulnessForm
 {
-    public static function getToolsSchema(): array
+    public static function getSchema(): array
     {
         return
             [
@@ -38,12 +40,11 @@ class MindfulnessForm
                     ])
                     ->compact()
                     ->collapsible()
-                    ->visible(fn(callable $get) => $get('tools.mindfulness.enabled') === true),
-
+                    ->visible(fn (callable $get) => $get('tools.mindfulness.enabled') === true),
             ];
     }
 
-    public static function getToolsResourcesSchema(): Component
+    public static function getMediaSchema(): Component
     {
         return Section::make('Mindfulness resources')
             ->schema([
@@ -59,10 +60,12 @@ class MindfulnessForm
 
                         // For new records (create)
                         $versionCountryId = $get('version_country_id');
-                        if (!$versionCountryId)
+                        if (! $versionCountryId) {
                             return false;
+                        }
 
                         $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                         return $versionCountry?->tools['mindfulness']['enabled'] === true;
                     }),
 
@@ -76,7 +79,7 @@ class MindfulnessForm
                         TextInput::make('tools.mindfulness.mindfulness-conscious-breathing.soundURI')
                             ->label('Sound uri')
                             ->url()
-                            ->required()
+                            ->required(),
                     ])
                     ->collapsible()
                     ->compact()
@@ -88,10 +91,12 @@ class MindfulnessForm
 
                         // For new records (create)
                         $versionCountryId = $get('version_country_id');
-                        if (!$versionCountryId)
+                        if (! $versionCountryId) {
                             return false;
+                        }
 
                         $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                         return $versionCountry?->tools['mindfulness']['mindfulness-conscious-breathing'] === true;
                     }),
 
@@ -105,7 +110,7 @@ class MindfulnessForm
                         TextInput::make('tools.mindfulness.mindfulness-mindful-walking.soundURI')
                             ->label('Sound uri')
                             ->url()
-                            ->required()
+                            ->required(),
                     ])
                     ->collapsible()
                     ->compact()
@@ -117,10 +122,12 @@ class MindfulnessForm
 
                         // For new records (create)
                         $versionCountryId = $get('version_country_id');
-                        if (!$versionCountryId)
+                        if (! $versionCountryId) {
                             return false;
+                        }
 
                         $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                         return $versionCountry?->tools['mindfulness']['mindfulness-mindful-walking'] === true;
                     }),
 
@@ -134,7 +141,7 @@ class MindfulnessForm
                         TextInput::make('tools.mindfulness.mindfulness-emotional-discomfort.soundURI')
                             ->label('Sound uri')
                             ->url()
-                            ->required()
+                            ->required(),
                     ])
                     ->collapsible()
                     ->compact()
@@ -146,10 +153,12 @@ class MindfulnessForm
 
                         // For new records (create)
                         $versionCountryId = $get('version_country_id');
-                        if (!$versionCountryId)
+                        if (! $versionCountryId) {
                             return false;
+                        }
 
                         $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                         return $versionCountry?->tools['mindfulness']['mindfulness-emotional-discomfort'] === true;
                     }),
 
@@ -163,7 +172,7 @@ class MindfulnessForm
                         TextInput::make('tools.mindfulness.mindfulness-sense-awareness.soundURI')
                             ->label('Sound uri')
                             ->url()
-                            ->required()
+                            ->required(),
                     ])
                     ->collapsible()
                     ->collapsed()
@@ -176,10 +185,12 @@ class MindfulnessForm
 
                         // For new records (create)
                         $versionCountryId = $get('version_country_id');
-                        if (!$versionCountryId)
+                        if (! $versionCountryId) {
                             return false;
+                        }
 
                         $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                         return $versionCountry?->tools['mindfulness']['mindfulness-sense-awareness'] === true;
                     }),
 
@@ -193,7 +204,7 @@ class MindfulnessForm
                         TextInput::make('tools.mindfulness.mindfulness-loving-kindness.soundURI')
                             ->label('Sound uri')
                             ->url()
-                            ->required()
+                            ->required(),
 
                     ])
                     ->collapsible()
@@ -206,12 +217,14 @@ class MindfulnessForm
 
                         // For new records (create)
                         $versionCountryId = $get('version_country_id');
-                        if (!$versionCountryId)
+                        if (! $versionCountryId) {
                             return false;
+                        }
 
                         $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                         return $versionCountry?->tools['mindfulness']['mindfulness-loving-kindness'] === true;
-                    })
+                    }),
 
             ])
             ->visible(function ($get, $livewire) {
@@ -222,13 +235,185 @@ class MindfulnessForm
 
                 // For new records (create)
                 $versionCountryId = $get('version_country_id');
-                if (!$versionCountryId)
+                if (! $versionCountryId) {
                     return false;
+                }
 
                 $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                 return $versionCountry?->tools['mindfulness']['enabled'] === true;
             })
             ->collapsible()
             ->compact();
+    }
+
+    public static function getContentSchema(): array
+    {
+        return [
+            Fieldset::make('Conscious Breathing')
+                ->columns(2)
+                ->schema([
+                    Textarea::make('tools.mindfulness.conscious-breathing.description')
+                        ->label('Description')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    TextInput::make('tools.mindfulness.conscious-breathing.action-btn-label')
+                        ->label('Action Button Label')
+                        ->required(),
+
+                    TextInput::make('tools.mindfulness.conscious-breathing.done')
+                        ->label('Done Label')
+                        ->required(),
+
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['mindfulness']['mindfulness-conscious-breathing'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['mindfulness']['mindfulness-conscious-breathing'] === true;
+                }),
+
+            Fieldset::make('Mindful Walking')
+                ->columns(2)
+                ->schema([
+                    Textarea::make('tools.mindfulness.mindful-walking.description')
+                        ->label('Description')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    TextInput::make('tools.mindfulness.mindful-walking.action-btn-label')->label('Action Button Label')->required(),
+                    TextInput::make('tools.mindfulness.mindful-walking.done')->label('Done Label')->required(),
+
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['mindfulness']['mindfulness-mindful-walking'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['mindfulness']['mindfulness-mindful-walking'] === true;
+                }),
+
+            Fieldset::make('Emotional Discomfort')
+                ->columns(2)
+                ->schema([
+                    Textarea::make('tools.mindfulness.emotional-discomfort.description')
+                        ->label('Description')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    TextInput::make('tools.mindfulness.emotional-discomfort.action-btn-label')
+                        ->label('Action Button Label')
+                        ->required(),
+
+                    TextInput::make('tools.mindfulness.emotional-discomfort.done')
+                        ->label('Done Label')
+                        ->required(),
+
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['mindfulness']['mindfulness-emotional-discomfort'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['mindfulness']['mindfulness-emotional-discomfort'] === true;
+                }),
+
+            Fieldset::make('Sense Awareness')
+                ->columns(2)
+                ->schema([
+                    Textarea::make('tools.mindfulness.sense-awareness.description')
+                        ->label('Description')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    TextInput::make('tools.mindfulness.sense-awareness.action-btn-label')
+                        ->label('Action Button Label')
+                        ->required(),
+
+                    TextInput::make('tools.mindfulness.sense-awareness.done')
+                        ->label('Done Label')
+                        ->required(),
+
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['mindfulness']['mindfulness-sense-awareness'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['mindfulness']['mindfulness-sense-awareness'] === true;
+                }),
+
+            Fieldset::make('Loving Kindness')
+                ->columns(2)
+                ->schema([
+                    Textarea::make('tools.mindfulness.loving-kindness.description')
+                        ->label('Description')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    TextInput::make('tools.mindfulness.loving-kindness.action-btn-label')
+                        ->label('Action Button Label')
+                        ->required(),
+
+                    TextInput::make('tools.mindfulness.loving-kindness.done')
+                        ->label('Done Label')
+                        ->required(),
+
+                ])
+                ->visible(function ($get, $livewire) {
+                    // For existing records (edit)
+                    if ($record = $livewire->getRecord()) {
+                        return $record->versionCountry?->tools['mindfulness']['mindfulness-loving-kindness'] === true;
+                    }
+
+                    // For new records (create)
+                    $versionCountryId = $get('version_country_id');
+                    if (! $versionCountryId) {
+                        return false;
+                    }
+
+                    $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
+                    return $versionCountry?->tools['mindfulness']['mindfulness-loving-kindness'] === true;
+                }),
+        ];
     }
 }

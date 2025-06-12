@@ -12,14 +12,14 @@ use Filament\Forms\Components\Toggle;
 
 class AmbientSoundsForm
 {
-    public static function getToolsSchema(): Field
+    public static function getSchema(): Field
     {
         return
             Toggle::make('tools.ambient-sounds')
                 ->label('Ambient sounds');
     }
 
-    public static function getToolsResourcesSchema(): Component
+    public static function getMediaSchema(): Component
     {
         return
             Section::make('Ambient sounds resources')
@@ -112,13 +112,81 @@ class AmbientSoundsForm
 
                     // For new records (create)
                     $versionCountryId = $get('version_country_id');
-                    if (!$versionCountryId)
+                    if (! $versionCountryId) {
                         return false;
+                    }
 
                     $versionCountry = \App\Models\VersionCountry::find($versionCountryId);
+
                     return $versionCountry?->tools['ambient-sounds'] === true;
                 })
                 ->collapsible()
                 ->compact();
+    }
+
+    public static function getContentSchema(): array
+    {
+        return
+            [
+                TextInput::make('tools.ambient-sounds.select')
+                    ->label('Select an audio to play')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.beach')
+                    ->label('Beach')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.birds')
+                    ->label('Birds')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.country-road')
+                    ->label('Country Road')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.crickets')
+                    ->label('Crickets')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.dripping-water')
+                    ->label('Dripping Water')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.forest')
+                    ->label('Forest')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.frogs')
+                    ->label('Frogs')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.marsh')
+                    ->label('Marsh')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.public-pool')
+                    ->label('Public Pool')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.rain')
+                    ->label('Rain')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.running-water')
+                    ->label('Running Water')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.stream-water')
+                    ->label('Stream Water')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.waterfall')
+                    ->label('Waterfall')
+                    ->required(),
+
+                TextInput::make('tools.ambient-sounds.wind')
+                    ->label('Wind')
+                    ->required(),
+            ];
     }
 }

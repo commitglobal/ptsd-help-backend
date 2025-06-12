@@ -53,7 +53,12 @@ class VersionCountriesRelationManager extends RelationManager
                     ->modalWidth('xl'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->modalWidth('xl'),
+                Tables\Actions\ViewAction::make()
+                    ->url(fn($record) => route('filament.admin.resources.version-countries.view', ['record' => $record]))
+                    ->openUrlInNewTab(false),
+                Tables\Actions\EditAction::make()
+                    ->url(fn($record) => route('filament.admin.resources.version-countries.edit', ['record' => $record]))
+                    ->openUrlInNewTab(false),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
