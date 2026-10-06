@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_shared_tool_flags",
+  "info": {
+    "displayName": "Tool flag"
+  },
+  "attributes": {
+    "key": {
+      "type": "enumeration",
+      "enum": [
+        "relationships",
+        "ambient-sounds",
+        "mindfulness",
+        "my-feelings",
+        "worry-time",
+        "rid",
+        "sleep",
+        "my-strengths",
+        "recreational-activities",
+        "soothe-senses",
+        "connect-with-others",
+        "change-perspective",
+        "grounding",
+        "quotes",
+        "shift-thoughts"
+      ],
+      "required": true
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "subcategories": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.subtool-flag"
+    }
+  }
+}

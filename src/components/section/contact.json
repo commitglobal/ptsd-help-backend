@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_section_contacts",
+  "info": { "displayName": "Personal contacts" },
+  "attributes": {
+    "label": { "type": "string", "required": true }
+  }
+}

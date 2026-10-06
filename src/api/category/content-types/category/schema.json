@@ -1,0 +1,13 @@
+{
+  "kind": "collectionType",
+  "collectionName": "categories",
+  "info": { "singularName": "category", "pluralName": "categories", "displayName": "Category" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "uid": { "type": "string", "required": false, "pluginOptions": { "i18n": { "localized": false } } },
+    "label": { "type": "string", "required": true, "pluginOptions": { "i18n": { "localized": true } } },
+    "icon": { "type": "media", "multiple": false, "allowedTypes": ["images"], "pluginOptions": { "i18n": { "localized": false } } },
+    "topics": { "type": "relation", "relation": "manyToMany", "target": "api::topic.topic", "inversedBy": "categories" }
+  }
+}

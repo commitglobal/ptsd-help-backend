@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_section_multi_pages",
+  "info": { "displayName": "Multi page" },
+  "attributes": {
+    "pages": { "type": "component", "repeatable": true, "component": "shared.page" }
+  }
+}

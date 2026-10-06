@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_item_category_refs",
+  "info": { "displayName": "Category" },
+  "attributes": {
+    "category": { "type": "relation", "relation": "oneToOne", "target": "api::category.category" }
+  }
+}

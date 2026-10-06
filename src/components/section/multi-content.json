@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_section_multi_contents",
+  "info": { "displayName": "Multi content" },
+  "attributes": {
+    "blocks": { "type": "component", "repeatable": true, "component": "shared.block" }
+  }
+}

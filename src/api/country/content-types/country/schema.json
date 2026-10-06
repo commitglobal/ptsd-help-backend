@@ -1,0 +1,10 @@
+{
+  "kind": "collectionType",
+  "collectionName": "countries",
+  "info": { "singularName": "country", "pluralName": "countries", "displayName": "Country" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "code": { "type": "string", "required": true, "unique": true, "regex": "^[A-Z]{2}$" },
+    "name": { "type": "string", "required": true }
+  }
+}

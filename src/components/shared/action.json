@@ -1,0 +1,11 @@
+{
+  "collectionName": "components_shared_actions",
+  "info": { "displayName": "Action" },
+  "attributes": {
+    "type": { "type": "enumeration", "enum": ["start_tool", "external", "phone", "webview", "share"], "required": true },
+    "toolId": { "type": "string" },
+    "url": { "type": "string" },
+    "number": { "type": "string" },
+    "message": { "type": "text" }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_shared_subtool_flags",
+  "info": {
+    "displayName": "Subtool flag"
+  },
+  "attributes": {
+    "key": {
+      "type": "enumeration",
+      "enum": [
+        "relationships-reconnect-with-partner",
+        "relationships-positive-communication",
+        "relationships-i-messages",
+        "relationships-healthy-arguments",
+        "mindfulness-conscious-breathing",
+        "mindfulness-mindful-walking",
+        "mindfulness-emotional-discomfort",
+        "mindfulness-sense-awareness",
+        "mindfulness-loving-kindness",
+        "sleep-help",
+        "sleep-habits",
+        "sleep-perspective",
+        "recreational-activities-alone",
+        "recreational-activities-city",
+        "recreational-activities-nature"
+      ],
+      "required": true
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    }
+  }
+}

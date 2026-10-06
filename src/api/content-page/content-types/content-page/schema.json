@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "content_pages",
+  "info": { "singularName": "content-page", "pluralName": "content-pages", "displayName": "Content page (Learn / Support)" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "country": { "type": "relation", "relation": "manyToOne", "target": "api::country.country", "pluginOptions": { "i18n": { "localized": false } } },
+    "kind": { "type": "enumeration", "enum": ["learn", "support"], "required": true, "pluginOptions": { "i18n": { "localized": false } } },
+    "title": { "type": "string", "required": true, "pluginOptions": { "i18n": { "localized": true } } },
+    "items": {
+      "type": "dynamiczone",
+      "pluginOptions": { "i18n": { "localized": true } },
+      "components": ["item.category-ref", "item.topic-ref"]
+    }
+  }
+}

@@ -1,0 +1,35 @@
+# Staging only. Local development runs `npm run develop` against the database in .env (no Docker).
+#
+#   docker compose up -d --build                    # DB from .env (external/managed database)
+#   docker compose --profile with-db up -d --build  # also start the bundled postgres service
+#
+# With --profile with-db, set DATABASE_HOST=postgres and DATABASE_PORT=5432 in the staging .env.
+services:
+  strapi:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - '1337:1337'
+    depends_on:
+      postgres:
+        condition: service_started
+        required: false
+
+  postgres:
+    image: postgres:16-alpine
+    profiles: ['with-db']
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-ptsd-help-backend}
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD must be set}
+    ports:
+      - '127.0.0.1:5434:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}

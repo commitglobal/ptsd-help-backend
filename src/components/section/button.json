@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_section_buttons",
+  "info": { "displayName": "Button" },
+  "attributes": {
+    "label": { "type": "string", "required": true },
+    "action": { "type": "component", "repeatable": false, "required": true, "component": "shared.action" }
+  }
+}

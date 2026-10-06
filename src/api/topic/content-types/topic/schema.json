@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "topics",
+  "info": { "singularName": "topic", "pluralName": "topics", "displayName": "Topic (article)" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": { "i18n": { "localized": true } },
+  "attributes": {
+    "uid": { "type": "string", "required": false, "pluginOptions": { "i18n": { "localized": false } } },
+    "label": { "type": "string", "required": true, "pluginOptions": { "i18n": { "localized": true } } },
+    "icon": { "type": "media", "multiple": false, "allowedTypes": ["images"], "pluginOptions": { "i18n": { "localized": false } } },
+    "sections": {
+      "type": "dynamiczone",
+      "pluginOptions": { "i18n": { "localized": true } },
+      "components": [
+        "section.image",
+        "section.text",
+        "section.rich-text",
+        "section.button",
+        "section.contact",
+        "section.multi-content",
+        "section.multi-page"
+      ]
+    },
+    "categories": { "type": "relation", "relation": "manyToMany", "target": "api::category.category", "mappedBy": "topics" }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_section_texts",
+  "info": { "displayName": "Text" },
+  "attributes": {
+    "content": { "type": "text", "required": true }
+  }
+}

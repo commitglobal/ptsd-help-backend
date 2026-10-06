@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_blocks",
+  "info": { "displayName": "Block", "description": "Item inside multi-content / multi-page" },
+  "attributes": {
+    "type": { "type": "enumeration", "enum": ["image", "text", "rich-text", "button"], "required": true },
+    "image": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "alt": { "type": "string" },
+    "content": { "type": "text" },
+    "body": { "type": "blocks" },
+    "label": { "type": "string" },
+    "action": { "type": "component", "repeatable": false, "component": "shared.action" }
+  }
+}

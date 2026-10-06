@@ -1,0 +1,10 @@
+{
+  "kind": "collectionType",
+  "collectionName": "feature_flags",
+  "info": { "singularName": "feature-flag", "pluralName": "feature-flags", "displayName": "Tool visibility" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "country": { "type": "relation", "relation": "oneToOne", "target": "api::country.country" },
+    "tools": { "type": "component", "repeatable": true, "component": "shared.tool-flag" }
+  }
+}

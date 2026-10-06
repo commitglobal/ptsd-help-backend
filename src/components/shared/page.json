@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_shared_pages",
+  "info": { "displayName": "Page" },
+  "attributes": {
+    "blocks": { "type": "component", "repeatable": true, "component": "shared.block" }
+  }
+}
