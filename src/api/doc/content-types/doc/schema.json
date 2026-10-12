@@ -1,0 +1,11 @@
+{
+  "kind": "collectionType",
+  "collectionName": "docs",
+  "info": { "singularName": "doc", "pluralName": "docs", "displayName": "Docs" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "content": { "type": "blocks" },
+    "order": { "type": "integer", "visible": false }
+  }
+}

@@ -11,6 +11,7 @@ import {
 } from './validation/tool-asset';
 import { countryLanguageProblem } from './constants/country-languages';
 import { registerToolAssetCopyRoutes } from './admin-api/tool-asset-copy';
+import { registerDocsRoutes } from './admin-api/docs';
 
 const WRITE_ACTIONS = new Set(['create', 'update']);
 const UID_CONTENT_TYPES = new Set(['api::topic.topic', 'api::category.category']);
@@ -72,6 +73,7 @@ const assertUniqueToolAsset = async (strapi: Core.Strapi, action: string, params
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
     registerToolAssetCopyRoutes(strapi);
+    registerDocsRoutes(strapi);
 
     strapi.documents.use(async (context, next) => {
       if (UID_CONTENT_TYPES.has(context.uid) && WRITE_ACTIONS.has(context.action)) {
