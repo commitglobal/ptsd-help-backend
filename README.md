@@ -15,7 +15,7 @@ GRANT ALL PRIVILEGES ON `ptsd-help-backend`.* TO 'strapi'@'localhost';
 ```
 
 Tabelele le creează Strapi la primul `npm run develop`. Proiectul a rulat inițial pe PostgreSQL; datele au fost mutate
-cu `npx strapi export` / `npx strapi import` (blocul Postgres e încă în `config/database.ts`).
+cu `npx strapi export` / `npx strapi import`.
 
 ```bash
 cp .env.example .env        # completează secretele și datele bazei locale

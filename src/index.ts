@@ -203,8 +203,8 @@ export default {
       where: { type: 'public' },
       populate: { permissions: true },
     });
-    // Strapi 5.11's deleteMany builds invalid Postgres SQL for a relation filter (`where: { role }`),
-    // so delete the public role's permissions by id instead.
+    // Delete the public role's permissions by id: a plain id filter works on every database, unlike a
+    // relation filter (`where: { role }`) in deleteMany.
     const permissionIds = ((publicRole?.permissions ?? []) as { id: number }[]).map((p) => p.id);
     if (permissionIds.length) {
       await strapi.db.query('plugin::users-permissions.permission').deleteMany({
