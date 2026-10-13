@@ -7,11 +7,13 @@ describe('generated keys', () => {
     expect(ASSET_KEYS).toContain('AMBIENT_SOUNDS.BEACH.soundURI');
   });
 
-  it('has the 15 feature-flag tools and 15 subcategories', () => {
-    expect(TOOL_KEYS).toHaveLength(15);
+  it('has all 21 app tools and 22 subcategories as feature-flag keys', () => {
+    expect(TOOL_KEYS).toHaveLength(21);
     expect(TOOL_KEYS).toContain('relationships');
-    expect(SUBTOOL_KEYS).toHaveLength(15);
+    expect(TOOL_KEYS).toContain('pause');
+    expect(SUBTOOL_KEYS).toHaveLength(22);
     expect(SUBTOOL_KEYS).toContain('mindfulness-loving-kindness');
+    expect(SUBTOOL_KEYS).toContain('clouds');
   });
 
   it('has the tool ids the app can start from content buttons', () => {

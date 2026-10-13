@@ -1,9 +1,9 @@
 # Staging only. Local development runs `npm run develop` against the database in .env (no Docker).
 #
 #   docker compose up -d --build                    # DB from .env (external/managed database)
-#   docker compose --profile with-db up -d --build  # also start the bundled postgres service
+#   docker compose --profile with-db up -d --build  # also start the bundled mysql service
 #
-# With --profile with-db, set DATABASE_HOST=postgres and DATABASE_PORT=5432 in the staging .env.
+# With --profile with-db, set DATABASE_HOST=mysql and DATABASE_PORT=3306 in the staging .env.
 services:
   strapi:
     build: .
@@ -14,22 +14,29 @@ services:
     ports:
       - '1337:1337'
     depends_on:
-      postgres:
-        condition: service_started
+      mysql:
+        condition: service_healthy
         required: false
 
-  postgres:
-    image: postgres:16-alpine
+  mysql:
+    image: mysql:8.4
     profiles: ['with-db']
     restart: unless-stopped
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_0900_ai_ci']
     environment:
-      POSTGRES_DB: ${DATABASE_NAME:-ptsd-help-backend}
-      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD must be set}
+      MYSQL_DATABASE: ${DATABASE_NAME:-ptsd-help-backend}
+      MYSQL_USER: ${DATABASE_USERNAME:-strapi}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD must be set}
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
-      - '127.0.0.1:5434:5432'
+      - '127.0.0.1:3307:3306'
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '--silent']
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
 volumes:
-  pgdata: {}
+  mysqldata: {}

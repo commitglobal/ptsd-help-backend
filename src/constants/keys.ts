@@ -87,18 +87,24 @@ export const TOOL_KEYS: readonly string[] = [
   "relationships",
   "ambient-sounds",
   "mindfulness",
+  "pause",
   "my-feelings",
+  "sleep",
   "worry-time",
   "rid",
-  "sleep",
-  "my-strengths",
-  "recreational-activities",
   "soothe-senses",
   "connect-with-others",
   "change-perspective",
   "grounding",
   "quotes",
-  "shift-thoughts"
+  "recreational-activities",
+  "my-strengths",
+  "shift-thoughts",
+  "observe-thoughts",
+  "postive-imagery",
+  "body-scan",
+  "muscle-relaxation",
+  "deep-breathing"
 ];
 
 export const SUBTOOL_KEYS: readonly string[] = [
@@ -116,7 +122,14 @@ export const SUBTOOL_KEYS: readonly string[] = [
   "sleep-perspective",
   "recreational-activities-alone",
   "recreational-activities-city",
-  "recreational-activities-nature"
+  "recreational-activities-nature",
+  "clouds",
+  "river",
+  "beach",
+  "country-road",
+  "forest",
+  "julia",
+  "robyn"
 ];
 
 export const APP_TOOL_IDS: readonly string[] = [

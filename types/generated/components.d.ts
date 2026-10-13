@@ -166,6 +166,13 @@ export interface SharedSubtoolFlag extends Struct.ComponentSchema {
         'recreational-activities-alone',
         'recreational-activities-city',
         'recreational-activities-nature',
+        'clouds',
+        'river',
+        'beach',
+        'country-road',
+        'forest',
+        'julia',
+        'robyn',
       ]
     > &
       Schema.Attribute.Required;
@@ -186,18 +193,24 @@ export interface SharedToolFlag extends Struct.ComponentSchema {
         'relationships',
         'ambient-sounds',
         'mindfulness',
+        'pause',
         'my-feelings',
+        'sleep',
         'worry-time',
         'rid',
-        'sleep',
-        'my-strengths',
-        'recreational-activities',
         'soothe-senses',
         'connect-with-others',
         'change-perspective',
         'grounding',
         'quotes',
+        'recreational-activities',
+        'my-strengths',
         'shift-thoughts',
+        'observe-thoughts',
+        'postive-imagery',
+        'body-scan',
+        'muscle-relaxation',
+        'deep-breathing',
       ]
     > &
       Schema.Attribute.Required;
@@ -206,7 +219,7 @@ export interface SharedToolFlag extends Struct.ComponentSchema {
 }
 
 declare module '@strapi/strapi' {
-  export module Public {
+  export namespace Public {
     export interface ComponentSchemas {
       'item.category-ref': ItemCategoryRef;
       'item.topic-ref': ItemTopicRef;

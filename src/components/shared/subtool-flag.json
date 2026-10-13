@@ -21,7 +21,14 @@
         "sleep-perspective",
         "recreational-activities-alone",
         "recreational-activities-city",
-        "recreational-activities-nature"
+        "recreational-activities-nature",
+        "clouds",
+        "river",
+        "beach",
+        "country-road",
+        "forest",
+        "julia",
+        "robyn"
       ],
       "required": true
     },

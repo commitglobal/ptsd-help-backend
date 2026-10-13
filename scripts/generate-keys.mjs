@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generates key enums from the current S3 config and the mobile app's tool ids.
+// Generates asset keys from the current S3 config and tool/subtool keys from the mobile app's tool ids.
 // Re-run whenever the app adds tools or asset keys: npm run generate:keys
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,7 +12,6 @@ const mobileDir = path.resolve(process.env.MOBILE_DIR ?? path.join(root, '..', '
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
 
 const mapping = readJson(path.join(s3Dir, 'config', 'CMSToolsAssetsMapping_RO_ro.json'));
-const foggles = readJson(path.join(s3Dir, 'config', 'foggles_RO.json'));
 const useTools = fs.readFileSync(path.join(mobileDir, 'hooks', 'useTools.ts'), 'utf8');
 
 const enumValues = (name) => {
@@ -22,9 +21,9 @@ const enumValues = (name) => {
 };
 
 const assetKeys = Object.keys(mapping);
-const toolKeys = Object.keys(foggles.features.tools);
-const subtoolKeys = Object.values(foggles.features.tools).flatMap((t) => Object.keys(t.subcategories ?? {}));
-const appToolIds = [...new Set([...enumValues('ToolIds'), ...enumValues('ToolSubcategoriesIds')])];
+const toolKeys = enumValues('ToolIds');
+const subtoolKeys = enumValues('ToolSubcategoriesIds');
+const appToolIds = [...new Set([...toolKeys, ...subtoolKeys])];
 
 const write = (rel, content) => {
   const file = path.join(root, rel);

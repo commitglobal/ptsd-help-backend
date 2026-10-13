@@ -132,4 +132,4 @@ build
 
 scripts/.media-map.json
 
-scripts/.richtext-backup.json
+scripts/.feature-flags-backup.json

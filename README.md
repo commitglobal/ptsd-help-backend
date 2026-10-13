@@ -5,8 +5,17 @@ Design: `../docs/superpowers/specs/2026-09-28-strapi-cms-design.md`.
 
 ## Local
 
-Dezvoltarea locală folosește PostgreSQL-ul local configurat în `.env` (implicit `127.0.0.1:5432`, baza
-`ptsd-help-backend`). Fără Docker.
+Dezvoltarea locală folosește MySQL 8.4 local configurat în `.env` (`DATABASE_CLIENT=mysql`, `127.0.0.1:3306`, baza
+`ptsd-help-backend`, user `strapi`). Fără Docker. Baza se creează o singură dată, ca root:
+
+```sql
+CREATE DATABASE `ptsd-help-backend` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE USER 'strapi'@'localhost' IDENTIFIED BY '...';
+GRANT ALL PRIVILEGES ON `ptsd-help-backend`.* TO 'strapi'@'localhost';
+```
+
+Tabelele le creează Strapi la primul `npm run develop`. Proiectul a rulat inițial pe PostgreSQL; datele au fost mutate
+cu `npx strapi export` / `npx strapi import` (blocul Postgres e încă în `config/database.ts`).
 
 ```bash
 cp .env.example .env        # completează secretele și datele bazei locale
@@ -52,10 +61,6 @@ aceleași fișiere din Media Library (fără upload nou). Cheile care lipsesc la
 fără limba destinație primesc limba, iar cele care o au deja nu se modifică. Butonul apelează
 `POST /ptsd-admin/tool-assets/copy` (rută de admin, doar cu login de admin; `src/admin-api/tool-asset-copy.ts`).
 
-Migrarea din vechiul tip „Tools assets” (o intrare per țară cu 81 de componente) s-a făcut o singură dată, cu
-serverul oprit, cu `npm run build && npm run migrate:tool-asset` (idempotent; face întâi un `pg_dump` în
-`../.superpowers/sdd/2026-09-28-strapi-cms/`).
-
 ## Țări și limbi
 
 Limbile permise pe țară sunt în `src/constants/country-languages.ts` (AM → hy; RO → ro, en, uk; UA → uk) și trebuie
@@ -79,19 +84,7 @@ Rulează din nou când aplicația adaugă tool-uri sau chei de media.
 Câmpurile rich text folosesc editorul Strapi **Rich text (Blocks)**: `section.rich-text.body` și `shared.block.body`
 (pentru blocurile de tip `rich-text`; blocurile de tip `text` folosesc câmpul text simplu `content`). Endpoint-urile
 aplicației trimit în continuare HTML: `src/lib/rich-text.ts` convertește blocurile în HTML (paragrafele devin `<div>`,
-iar cele importate din `<p>` legacy rămân `<p>`).
-
-Migrarea conținutului HTML existent în blocuri (o singură dată, cu serverul oprit; backup în `scripts/.richtext-backup.json`):
-
-```bash
-npm run build
-npm run migrate:richtext
-```
-
-Scripturi de curățenie (o singură dată, idempotente, cu serverul oprit):
-
-- `npx tsx scripts/cleanup-legacy-richtext-content.ts` golește HTML-ul legacy din `shared.block.content` la blocurile `rich-text` care au deja `body`.
-- `npx tsx scripts/cleanup-orphan-components.ts [--apply]` găsește (dry run) și șterge (`--apply`, într-o tranzacție) rândurile de componente orfane rămase după update-uri.
+iar cele importate din `<p>` legacy rămân `<p>`). `npm run import:s3` convertește HTML-ul legacy direct în blocuri.
 
 ## Roluri admin
 
@@ -106,7 +99,7 @@ din `.env`-ul de staging și poate fi o bază externă/managed.
 
 ```bash
 docker compose up -d --build                    # DB externă, din .env
-docker compose --profile with-db up -d --build  # + serviciul postgres inclus (opțional)
+docker compose --profile with-db up -d --build  # + serviciul mysql inclus (opțional)
 docker compose logs -f strapi
 docker compose down
 ```
@@ -123,6 +116,7 @@ docker compose down
   `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `DATABASE_SSL`.
 
 **Opțional, `--profile with-db`:** pentru un host de staging fără bază de date proprie. Pornește și serviciul
-`postgres` (Postgres 16, date în volumul `pgdata`), expus doar pe `127.0.0.1:5434`. În acest caz setează în `.env`
-`DATABASE_HOST=postgres` și `DATABASE_PORT=5432` (rețeaua internă Docker); `DATABASE_NAME`, `DATABASE_USERNAME`
-și `DATABASE_PASSWORD` sunt folosite și pentru inițializarea bazei.
+`mysql` (MySQL 8.4, `utf8mb4`, date în volumul `mysqldata`), expus doar pe `127.0.0.1:3307`. În acest caz setează în
+`.env` `DATABASE_CLIENT=mysql`, `DATABASE_HOST=mysql` și `DATABASE_PORT=3306` (rețeaua internă Docker);
+`DATABASE_NAME`, `DATABASE_USERNAME` și `DATABASE_PASSWORD` sunt folosite și pentru inițializarea bazei și a userului.
+Parola de root e generată aleator la prima pornire (apare în `docker compose logs mysql`).
