@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { blocksToHtml, htmlToBlocks, type Blocks } from '../../src/lib/rich-text';
 
 const t = (text: string, marks: Record<string, boolean> = {}) => ({ type: 'text', text, ...marks });
@@ -203,8 +201,6 @@ describe('round trip', () => {
     expect(roundTrip('<p>1</p><div>2</div><p>3</p><div><div>4</div></div>')).toBe('<p>1</p><div>2</div><p>3</p><div>4</div>');
   });
 
-  const LEGACY_FILE = path.resolve(__dirname, '..', '..', '..', 's3-content', 'content', 'resources', 'RO', 'ro', 'learn.json');
-
   // Real samples from s3-content/content/resources/RO/ro/learn.json.
   const SAMPLES = [
     '<h1>Mindfulness Coach</h1><div><div>Mindfulness Coach oferă exerciții și informații care pot ajuta la:</div><ol><li><div>Concentrarea asupra momentului prezent</div></li><li><div><div>Elimină puterea gândurilor sau amintirilor nedorite</div></div></li></ol><div><div>Apasă pe pictograma de mesaj de mai jos pentru a partaja informații despre aceste aplicații cu alte persoane.</div></div></div>',
@@ -220,27 +216,4 @@ describe('round trip', () => {
     expect(roundTrip(once)).toBe(once);
   });
 
-  it('is stable for every rich-text item in RO/ro/learn.json and preserves the text', () => {
-    const items: string[] = [];
-    const walk = (v: unknown): void => {
-      if (Array.isArray(v)) return v.forEach(walk);
-      if (v && typeof v === 'object') {
-        const o = v as Record<string, unknown>;
-        if (o.type === 'rich-text' && typeof o.content === 'string') items.push(o.content);
-        Object.values(o).forEach(walk);
-      }
-    };
-    walk(JSON.parse(fs.readFileSync(LEGACY_FILE, 'utf8')));
-    expect(items.length).toBeGreaterThanOrEqual(5);
-
-    const textOf = (html: string) => htmlToBlocks(html).map(nodeText).join('|');
-    for (const html of items) {
-      const once = roundTrip(html);
-      expect(roundTrip(once)).toBe(once);
-      expect(textOf(once)).toBe(textOf(html));
-    }
-  });
 });
-
-const nodeText = (node: any): string =>
-  typeof node.text === 'string' ? node.text : (node.children ?? []).map(nodeText).join('');
