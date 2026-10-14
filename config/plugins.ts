@@ -70,7 +70,9 @@ const config = ({ env }: ConfigParams): Core.Config.Plugin => {
         },
         provider: 'aws-s3',
         providerOptions: {
-          baseUrl: env('S3_PUBLIC_URL'),
+          // Files get relative `/uploads/<hash><ext>` urls, like the local provider; the bucket stays private
+          // and src/middlewares/s3-media.ts streams them from S3, so clients never reach S3 directly.
+          baseUrl: '/uploads',
           s3Options: {
             credentials: {
               accessKeyId: env('S3_ACCESS_KEY_ID'),
@@ -79,7 +81,9 @@ const config = ({ env }: ConfigParams): Core.Config.Plugin => {
             region: env('S3_REGION'),
             params: {
               Bucket: env('S3_BUCKET'),
-              ACL: env('S3_ACL', 'public-read'),
+              // Present but undefined unless set: the provider then sends no ACL header (private bucket,
+              // ACLs disabled) instead of defaulting to public-read.
+              ACL: env('S3_ACL') || undefined,
             },
           },
         },

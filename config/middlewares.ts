@@ -38,6 +38,8 @@ const config = ({ env }: ConfigParams): Core.Config.Middlewares => {
     },
     'strapi::session',
     'strapi::favicon',
+    // Before strapi::public and the upload plugin's /uploads route: streams media from S3 when that provider is on.
+    'global::s3-media',
     'strapi::public',
   ];
 };
