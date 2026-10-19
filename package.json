@@ -38,7 +38,7 @@
     "@types/react-dom": "^18",
     "jest": "^30.5.2",
     "mime-types": "^3.0.2",
-    "ts-jest": "^29.4.14",
+    "ts-jest": "^29.4.15",
     "tsx": "^4.23.15",
     "typescript": "^5"
   },
