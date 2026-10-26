@@ -26,7 +26,7 @@
     "@strapi/strapi": "5.59.0",
     "mysql2": "^3.24.6",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react-dom": "^19.3.1",
     "react-router-dom": "^6.0.0",
     "styled-components": "^6.6.0"
   },
@@ -35,7 +35,7 @@
     "@types/mime-types": "^3.0.1",
     "@types/node": "^24",
     "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react-dom": "^19",
     "jest": "^30.5.2",
     "mime-types": "^3.0.2",
     "ts-jest": "^29.4.15",
