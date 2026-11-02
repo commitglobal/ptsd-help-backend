@@ -40,7 +40,7 @@
     "mime-types": "^3.0.2",
     "ts-jest": "^29.4.15",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^7"
   },
   "engines": {
     "node": ">=20.0.0 <=24.x.x",
